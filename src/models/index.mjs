@@ -1,10 +1,17 @@
 // Engine selection: API key first (fastest), Claude Code sign-in second.
 
+import { isAbsolute } from "node:path";
+import { pathToFileURL } from "node:url";
+
 import { createClaudeBackend, hasClaudeCli } from "./claude.mjs";
 
 export async function selectBackend({ engine = process.env.VERDICT_ENGINE || "auto", models = {}, env = process.env } = {}) {
   // A module path exporting createBackend() — used by the test suite to script model output.
-  if (env.VERDICT_BACKEND_MODULE) return (await import(env.VERDICT_BACKEND_MODULE)).createBackend({ models });
+  if (env.VERDICT_BACKEND_MODULE) {
+    const spec = env.VERDICT_BACKEND_MODULE;
+    // Windows paths (D:\...) are not valid import specifiers; file URLs are.
+    return (await import(isAbsolute(spec) ? pathToFileURL(spec).href : spec)).createBackend({ models });
+  }
   if (engine === "demo") return (await import("../demo.mjs")).createDemoBackend({ speed: Number(env.VERDICT_DEMO_SPEED || 1) });
   const hasKey = Boolean(env.ANTHROPIC_API_KEY || env.ANTHROPIC_AUTH_TOKEN);
   if (engine === "api" || (engine === "auto" && hasKey)) {
