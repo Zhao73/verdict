@@ -78,10 +78,10 @@ export function stanceTone(stance) {
 }
 
 /** A rating chip: " OVERWEIGHT ▲ " on a tinted background. */
-export function chip(rating) {
+export function chip(rating, label = rating) {
   const t = ratingTone(rating);
   const arrow = t === "bull" ? " ▲" : t === "bear" ? " ▼" : t === "hold" ? " ◆" : "";
-  return paint(` ${String(rating || "—").toUpperCase()}${arrow} `, colorMode === "none" ? { inverse: true } : { fg: "onAccent", bg: t === "dim" ? "faint" : t, bold: true });
+  return paint(` ${String(label || "—").toUpperCase()}${arrow} `, colorMode === "none" ? { inverse: true } : { fg: "onAccent", bg: t === "dim" ? "faint" : t, bold: true });
 }
 
 export const SPIN = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏";

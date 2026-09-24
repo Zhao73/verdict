@@ -3,6 +3,9 @@
 
 import * as data from "./data.mjs";
 import { evaluateLenses, LENS_IDS } from "./lenses.mjs";
+import { marketOf, newsEdition } from "./markets.mjs";
+import { namesFor } from "./names.mjs";
+import { detectLanguage } from "../i18n/index.mjs";
 
 async function settle(label, fn, gaps) {
   try {
@@ -24,12 +27,20 @@ export async function buildSnapshot(query, { news = true, options = true } = {})
   ]);
   const inst = instrument || { symbol, type: "unknown", route: "operating_company", gaps: [] };
   gaps.push(...(inst.gaps || []).map((g) => `instrument: ${g}`));
-  const newsQuery = inst.name ? `"${inst.name.replace(/[,.]?\s+(Inc|Corp|Corporation|Ltd|plc|Co|Holdings|Group)\.?$/i, "")}" OR ${symbol}` : symbol;
+  const market = marketOf(symbol);
+  const short = inst.name ? inst.name.replace(/[,.]?\s+(Inc|Corp|Corporation|Ltd|Limited|plc|Co|Holdings|Group|SA|SE|AG|NV|N\.V\.|S\.A\.)\.?$/i, "") : null;
+  const code = symbol.replace(/\.[A-Z]+$/, "");
+  const newsQuery = short ? `"${short}" OR ${code}` : code;
+  // Non-US names: also search the local-language edition with the name people use there.
+  const nonLatin = namesFor(symbol).filter((n) => !/^[\x00-\x7f]+$/.test(n));
+  const wantsTraditional = market.code === "HK" || market.code === "TW";
+  const local = nonLatin.find((n) => (detectLanguage(n, {}) === "zh-TW") === wantsTraditional) || nonLatin[0] || short;
+  const localQuery = market.code !== "US" && local ? `"${local}"${short && local !== short ? ` OR "${short}"` : ""}` : null;
   const [fundamentals, filings, opt, headlines] = await Promise.all([
     settle("fundamentals", () => data.getFundamentals(symbol, { instrument: inst, price: quote?.price, currency: quote?.currency || "USD" }), gaps),
     inst.cik ? settle("filings", () => data.getFilings(symbol, { instrument: inst, limit: 12 }), gaps) : null,
     options && inst.route !== "fund_lookthrough" ? settle("options", () => data.getOptions(symbol), gaps) : null,
-    news ? settle("news", () => data.getNews(newsQuery, { days: 30, limit: 15 }), gaps) : null,
+    news ? settle("news", () => mergeNews(newsQuery, localQuery, symbol), gaps) : null,
   ]);
   if (fundamentals?.available === false) gaps.push(`fundamentals: ${fundamentals.reason}`);
   if (opt?.available === false) gaps.push(`options: ${opt.reason}`);
@@ -38,6 +49,7 @@ export async function buildSnapshot(query, { news = true, options = true } = {})
     symbol,
     as_of: new Date().toISOString(),
     instrument: inst,
+    market: { code: market.code, country: market.country, exchange: market.exchange, currency: quote?.currency || market.currency, filings: market.filings, standard: market.standard },
     quote,
     technicals: history?.technicals?.available ? history.technicals : null,
     series: history?.series || [],
@@ -52,6 +64,23 @@ export async function buildSnapshot(query, { news = true, options = true } = {})
   snap.lenses = evaluateLenses(snap, LENS_IDS);
   snap.elapsed_ms = Date.now() - started;
   return snap;
+}
+
+/** English and local-edition headlines, de-duplicated and newest first. */
+async function mergeNews(query, localQuery, symbol) {
+  const [en, local] = await Promise.all([
+    data.getNews(query, { days: 30, limit: 15 }).catch((e) => (localQuery ? null : Promise.reject(e))),
+    localQuery ? data.getNews(localQuery, { days: 30, limit: 15, edition: newsEdition(symbol) }).catch(() => null) : null,
+  ]);
+  if (!en && !local) throw new Error("no news source reachable");
+  const seen = new Set();
+  const items = [...(local?.items || []), ...(en?.items || [])].filter((n) => {
+    const key = n.title.toLowerCase().replace(/\W+/g, "").slice(0, 60);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return { items: items.sort((a, b) => b.date.localeCompare(a.date)).slice(0, 15), source: (en || local).source };
 }
 
 function snapshotSources(s, { history, headlines }) {
@@ -73,6 +102,7 @@ export function snapshotBrief(s) {
   const L = [];
   const i = s.instrument;
   L.push(`Instrument: ${s.symbol}${i.name ? ` — ${i.name}` : ""} · type ${i.type} · route ${i.route}${i.exchange ? ` · ${i.exchange}` : ""}`);
+  if (s.market) L.push(`Market: ${s.market.country} · ${s.market.exchange} · quoted in ${s.market.currency} · primary filings: ${s.market.filings} · accounting: ${s.market.standard}`);
   const q = s.quote;
   if (q) L.push(`[data:quote] ${q.price} ${q.currency} (delayed, ${q.market_time}); day ${q.change_pct}%; 52w ${q.low_52w}–${q.high_52w}; dividend yield ${q.dividend_yield_pct ?? "n/a"}%`);
   const t = s.technicals;

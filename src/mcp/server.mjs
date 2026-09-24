@@ -12,19 +12,22 @@ import { htmlPath, reportPath } from "../engine/pipeline.mjs";
 import { snapshotBrief, buildSnapshot } from "../engine/snapshot.mjs";
 import { listRuns, resolveRun } from "../engine/store.mjs";
 import { watchStatus } from "../engine/watch.mjs";
+import { localCode } from "../engine/markets.mjs";
 
 const VERSION = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")).version;
 const PROTOCOLS = ["2025-06-18", "2025-03-26", "2024-11-05"];
-const sym = { type: "string", description: "Ticker, e.g. NVDA, AAPL, 0700.HK, 7203.T, SPY, ^GSPC" };
+const sym = { type: "string", description: "Ticker or local code from any market, e.g. NVDA, 0700.HK, 600519, 2330.TW, 7203.T, 005930.KS, SAP.DE, MC.PA, BHP.AX, TYO:7203" };
 const runId = { type: "string", description: "run_id from verdict_start" };
 
 export const TOOLS = [
   {
     name: "verdict_start",
     description: "Start research on a stock/ETF/index: fetches a live data snapshot (price, fundamentals, technicals, options, dated news, method lenses) in seconds and returns the run_id and the task list. mode deep (default): 4 research desks, bull and bear, decision. mode fast: 1 research task, decision.",
-    inputSchema: { type: "object", properties: { symbol: sym, mode: { type: "string", enum: ["deep", "fast"] }, language: { type: "string", description: "language of the user's request, e.g. en, zh-CN, ja" }, question: { type: "string", description: "the user's question, if any" }, host: { type: "string", description: "claude-code or codex" } }, required: ["symbol"] },
+    inputSchema: { type: "object", properties: { symbol: sym, mode: { type: "string", enum: ["deep", "fast"] }, language: { type: "string", description: "language of the user's request: en, zh-CN, zh-TW, ja, ko, fr, de, es, it, pt, nl or any other code" }, question: { type: "string", description: "the user's question, if any" }, host: { type: "string", description: "claude-code or codex" } }, required: ["symbol"] },
     handler: async ({ symbol, mode = "deep", language, question = "", host = "host" }) => {
-      const run = await startHostRun({ symbol, mode, language: normalizeLanguage(language || detectLanguage(question)), question, host });
+      const lang = normalizeLanguage(language || detectLanguage(question));
+      symbol = localCode(symbol, { language: lang }) || symbol;
+      const run = await startHostRun({ symbol, mode, language: lang, question, host });
       const tasks = Object.keys(run.desks);
       return [
         `run_id: ${run.run_id}`,

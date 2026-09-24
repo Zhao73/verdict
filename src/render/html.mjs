@@ -1,7 +1,7 @@
 // A single self-contained HTML report (no scripts, no external assets) with an inline SVG price
 // chart and a valuation bar. Light and dark themes follow the reader's system setting.
 
-import { deskTitle, t } from "../engine/i18n.mjs";
+import { deskTitle, ratingLabel, stanceLabel, t } from "../engine/i18n.mjs";
 import { DESKS } from "../engine/prompts.mjs";
 import { allGaps, upside } from "./markdown.mjs";
 
@@ -86,7 +86,7 @@ export function renderHtml(run) {
   }).join("") : "";
 
   const desks = Object.entries(run.desks || {}).map(([id, p]) => (p
-    ? `<details><summary>${h(deskTitle(id, run.language, DESKS))} <span class="pill ${p.stance === "bullish" ? "bull" : p.stance === "bearish" ? "bear" : "hold"}">${h(p.stance)}</span></summary><p>${h(p.summary)}</p>${list(p.findings.map((f) => `${h(f.claim)}${cite(f.sources.map((s) => (/^S\d+$/.test(s) ? `${id}:${s}` : s)))}`))}${p.key_numbers?.length ? `<table>${p.key_numbers.map((k) => `<tr><td>${h(k.label)}</td><td><b>${h(k.value)}</b></td></tr>`).join("")}</table>` : ""}</details>`
+    ? `<details><summary>${h(deskTitle(id, run.language, DESKS))} <span class="pill ${p.stance === "bullish" ? "bull" : p.stance === "bearish" ? "bear" : "hold"}">${h(stanceLabel(p.stance, run.language))}</span></summary><p>${h(p.summary)}</p>${list(p.findings.map((f) => `${h(f.claim)}${cite(f.sources.map((s) => (/^S\d+$/.test(s) ? `${id}:${s}` : s)))}`))}${p.key_numbers?.length ? `<table>${p.key_numbers.map((k) => `<tr><td>${h(k.label)}</td><td><b>${h(k.value)}</b></td></tr>`).join("")}</table>` : ""}</details>`
     : `<details><summary>${h(deskTitle(id, run.language, DESKS))} <span class="pill bear">${h(L.failed)}</span></summary></details>`)).join("");
 
   const sources = [
@@ -99,7 +99,7 @@ export function renderHtml(run) {
   <div class="brand">VERDICT</div>
   <h1>${h(title)}</h1>
   <div class="meta">${h(run.as_of)} · ${h(run.mode)}${q ? ` · ${h(q.price)} ${h(q.currency)}` : ""}${run.question ? ` · “${h(run.question)}”` : ""}</div>
-  ${d ? `<div class="verdict ${tone(d.rating)}"><span class="rating">${h(d.rating)}</span><span>${h(L.confidence)} ${h(L.levels[d.confidence] || d.confidence)}</span>${up === null ? "" : `<span>${h(L.basev)} ${up >= 0 ? "+" : ""}${up.toFixed(0)}%</span>`}</div>` : `<div class="verdict hold"><span class="rating">${h(run.state)}</span><span>${h(run.reason || "")}</span></div>`}
+  ${d ? `<div class="verdict ${tone(d.rating)}"><span class="rating">${h(ratingLabel(d.rating, run.language))}</span><span>${h(L.confidence)} ${h(L.levels[d.confidence] || d.confidence)}</span>${up === null ? "" : `<span>${h(L.basev)} ${up >= 0 ? "+" : ""}${up.toFixed(0)}%</span>`}</div>` : `<div class="verdict hold"><span class="rating">${h(run.state)}</span><span>${h(run.reason || "")}</span></div>`}
 </header>
 ${d ? `<p class="lead">${h(d.conclusion)}</p>` : ""}
 ${priceChart(run)}
@@ -119,7 +119,7 @@ ${section(L.sources, `<table class="src">${sources.map(([id, title, url, date]) 
 
   return `<!doctype html>
 <html lang="${h(run.language)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${h(run.symbol)} — ${h(d?.rating || run.state)} · Verdict</title>
+<title>${h(run.symbol)} — ${h(d ? ratingLabel(d.rating, run.language) : run.state)} · Verdict</title>
 <style>
 :root{--bg:#fbfaf7;--fg:#1d1b16;--muted:#6b665c;--line:#e6e1d6;--card:#fff;--accent:#c98a0b;--bull:#1a7f37;--bear:#cf222e;--hold:#9a6700;--bullbg:#dafbe1;--bearbg:#ffebe9;--holdbg:#fff8c5}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1115;--fg:#e8e6e1;--muted:#9a978f;--line:#262a33;--card:#161a21;--accent:#f5a524;--bull:#3fb950;--bear:#f85149;--hold:#d29922;--bullbg:#12261a;--bearbg:#2d1416;--holdbg:#2b230f}}

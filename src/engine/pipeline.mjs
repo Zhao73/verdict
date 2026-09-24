@@ -138,6 +138,7 @@ export async function research({ symbol, mode = "deep", language = "en", questio
     emit({ type: "stage", stage: "snapshot" });
     run.snapshot = snapshot || (await backend.snapshotFor?.(run.symbol)) || (await buildSnapshot(run.symbol));
     run.name = run.snapshot.instrument?.name || null;
+    run.market = run.snapshot.market || null;
     save(run);
     emit({ type: "snapshot", snapshot: run.snapshot });
     const snapText = snapshotBrief(run.snapshot);

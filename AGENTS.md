@@ -14,6 +14,11 @@ the terminal (`bin/verdict.mjs`), a Claude Code plugin and a Codex plugin.
 - `src/cli/` — commands and stream mode. `src/render/` — Markdown, HTML and terminal rendering.
 - `src/mcp/server.mjs` — plugin MCP server. `skills/verdict/`, `agents/` — plugin surface.
 - `src/demo.mjs` — offline demo on a fictional company (also used by `npm run shots`).
+- `src/i18n/` — one file per language (en, zh-CN, zh-TW, ja, ko, fr, de, es, it, pt, nl) with
+  report labels, UI strings, desk titles, ratings and stances; `index.mjs` normalizes codes and
+  detects the language from what people type. A new label must be added to every locale (tested).
+- `src/engine/markets.mjs` + `names.mjs` — exchange suffixes, local codes (600519, 0700, 2330,
+  7203, 005930, TYO:7203), currencies, filing sources, news editions and local company names.
 
 ## Rules
 

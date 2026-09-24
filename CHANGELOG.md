@@ -28,6 +28,17 @@ First release.
   `ask`, `history`, `show`, `export`, data commands, `doctor`, and an offline `demo`.
 - Self-contained HTML report with a price chart, value range and price levels.
 
+### Languages & markets
+- Eleven interface and report languages — English, 简体中文, 繁體中文, 日本語, 한국어, Français,
+  Deutsch, Español, Italiano, Português, Nederlands — detected from what you type or `--lang`;
+  models write in any requested language.
+- Markets beyond the US: China A-shares, Hong Kong, Taiwan, Japan, Korea, UK, the main European
+  exchanges, Australia, New Zealand, Canada, India, Singapore, Brazil and Mexico.
+- Local codes (`600519`, `0700`, `2330`, `7203`, `005930`), exchange prefixes (`SH600519`,
+  `TYO:7203`, `LON:SHEL`) and company names in local languages (腾讯, トヨタ, 삼성전자, LVMH).
+- Local-language news editions, market-specific filing sources and accounting standards in the
+  research brief, and London pence quotes converted to pounds.
+
 ### Engines
 - `api`: official Anthropic SDK — streaming, server-side web search and fetch, a strict submit
   tool, `pause_turn` resumption and refusal handling.

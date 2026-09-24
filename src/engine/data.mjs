@@ -4,13 +4,14 @@
 
 import { fetchJson, fetchText } from "./http.mjs";
 import { computeTechnicals } from "./technicals.mjs";
+import { canonicalSymbol, marketOf, MINOR_UNITS } from "./markets.mjs";
 
 const today = () => new Date().toISOString().slice(0, 10);
 const isoDate = (sec) => new Date(sec * 1000).toISOString().slice(0, 10);
 const round = (x, d = 2) => (Number.isFinite(x) ? Math.round(x * 10 ** d) / 10 ** d : null);
 
 export function normalizeSymbol(raw) {
-  const s = String(raw || "").trim().toUpperCase().replace(/^\$/, "");
+  const s = canonicalSymbol(String(raw || "").trim().toUpperCase().replace(/^\$/, ""));
   if (!/^[\^A-Z0-9][A-Z0-9.\-=^]{0,19}$/.test(s)) throw new Error(`invalid symbol: ${raw}`);
   return s;
 }
@@ -57,7 +58,8 @@ export async function resolveInstrument(query) {
   } catch (error) {
     out.gaps.push(`instrument search unavailable: ${error.message}`);
   }
-  if (out.type === "equity" || out.type === "unknown") {
+  // SEC only covers US listings; other markets never touch it.
+  if ((out.type === "equity" || out.type === "unknown") && marketOf(symbol).code === "US") {
     try {
       const sec = await lookupCik(symbol);
       if (sec) {
@@ -84,13 +86,22 @@ async function yahooChart(symbol, range = "2y") {
   const ts = result.timestamp || [];
   const q = result.indicators?.quote?.[0] || {};
   const adj = result.indicators?.adjclose?.[0]?.adjclose;
+  // London quotes in pence (GBp) and similar minor units are converted to the major currency,
+  // so prices, value ranges and charts all use one unit.
+  const meta = { ...(result.meta || {}) };
+  const minor = MINOR_UNITS[meta.currency];
+  const k = minor ? 1 / minor[1] : 1;
+  if (minor) {
+    meta.currency = minor[0];
+    for (const f of ["regularMarketPrice", "chartPreviousClose", "previousClose", "fiftyTwoWeekHigh", "fiftyTwoWeekLow"]) if (Number.isFinite(meta[f])) meta[f] *= k;
+  }
   const bars = ts.map((t, i) => ({
     date: isoDate(t),
-    close: (adj && Number.isFinite(adj[i]) ? adj[i] : q.close?.[i]) ?? null,
+    close: ((adj && Number.isFinite(adj[i]) ? adj[i] : q.close?.[i]) ?? NaN) * k,
     volume: q.volume?.[i] ?? null,
   })).filter((b) => Number.isFinite(b.close));
-  const dividends = Object.values(result.events?.dividends || {}).map((d) => ({ date: isoDate(d.date), amount: d.amount }));
-  return { meta: result.meta || {}, bars, dividends, url };
+  const dividends = Object.values(result.events?.dividends || {}).map((d) => ({ date: isoDate(d.date), amount: d.amount * k }));
+  return { meta, bars, dividends, url };
 }
 
 export async function getQuote(symbol) {
@@ -310,7 +321,8 @@ export async function getFundamentals(symbol, { instrument = null, price = null,
   }
   if (!inst.cik) {
     if (inst.sec_error) throw new Error(`SEC EDGAR unreachable (${inst.sec_error}); the CIK could not be looked up`);
-    return { symbol, available: false, route: inst.route, reason: "no SEC CIK (non-US or unlisted filer); use company filings from its home regulator" };
+    const m = marketOf(symbol);
+    return { symbol, available: false, route: inst.route, reason: m.code === "US" ? "no SEC CIK (unlisted or foreign filer); use the company's own filings" : `listed in ${m.country} (${m.exchange}); SEC XBRL does not cover it — filings are at ${m.filings}` };
   }
   const url = `https://data.sec.gov/api/xbrl/companyfacts/CIK${inst.cik}.json`;
   const doc = await fetchJson(url, { timeoutMs: 25000, ttlMs: 12 * 3600e3 });
@@ -376,10 +388,10 @@ export function parseRss(xml) {
   return items;
 }
 
-export async function getNews(query, { days: windowDays = 30, limit = 20 } = {}) {
+export async function getNews(query, { days: windowDays = 30, limit = 20, edition = { hl: "en-US", gl: "US", ceid: "US:en" } } = {}) {
   const q = String(query || "").trim();
   if (!q) throw new Error("news query is required");
-  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(`${q} when:${windowDays}d`)}&hl=en-US&gl=US&ceid=US:en`;
+  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(`${q} when:${windowDays}d`)}&hl=${encodeURIComponent(edition.hl)}&gl=${encodeURIComponent(edition.gl)}&ceid=${encodeURIComponent(edition.ceid)}`;
   const cutoff = new Date(Date.now() - windowDays * DAY).toISOString().slice(0, 10);
   const all = parseRss(await fetchText(url, { ttlMs: 10 * 60e3 }));
   const dated = all.filter((i) => i.date && i.date >= cutoff && i.date <= today());
@@ -388,7 +400,7 @@ export async function getNews(query, { days: windowDays = 30, limit = 20 } = {})
     window_days: windowDays,
     items: dated.sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit),
     excluded_undated_or_out_of_window: all.length - dated.length,
-    source: { title: `Google News RSS "${q}"`, url, retrieved: today() },
+    source: { title: `Google News RSS "${q}" (${edition.gl})`, url, retrieved: today() },
   };
 }
 

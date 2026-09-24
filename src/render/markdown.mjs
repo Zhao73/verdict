@@ -1,7 +1,7 @@
 // The saved report, assembled by code from the recorded packets: nothing a model summarised
 // away can go missing, and every citation is checked against the source table.
 
-import { deskTitle, t } from "../engine/i18n.mjs";
+import { deskTitle, ratingLabel, stanceLabel, t } from "../engine/i18n.mjs";
 import { DESKS } from "../engine/prompts.mjs";
 
 const esc = (s) => String(s ?? "").replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
@@ -20,7 +20,8 @@ export function renderReport(run) {
   const out = [];
   const title = `${run.symbol}${run.name ? ` — ${run.name}` : ""}`;
   out.push(`# ${title}`);
-  const meta = [`**${L.verdict}: ${d ? d.rating : run.state}**`];
+  const rated = d ? (ratingLabel(d.rating, run.language) === d.rating ? d.rating : `${ratingLabel(d.rating, run.language)} (${d.rating})`) : run.state;
+  const meta = [`**${L.verdict}: ${rated}**`];
   if (d) meta.push(`${L.confidence} ${L.levels[d.confidence] || d.confidence}`);
   meta.push(run.as_of, run.mode);
   if (run.elapsed_ms) meta.push(`${L.elapsed} ${Math.round(run.elapsed_ms / 1000)}s`);
@@ -74,7 +75,7 @@ export function renderReport(run) {
       continue;
     }
     const scoped = (x) => (/^S\d+$/.test(x) ? `${id}:${x}` : x);
-    out.push(`### ${deskTitle(id, run.language, DESKS)} (${p.stance})`, p.summary, p.findings.map((f) => `- ${f.claim}${cite(f.sources.map(scoped))}`).join("\n"));
+    out.push(`### ${deskTitle(id, run.language, DESKS)} (${stanceLabel(p.stance, run.language)})`, p.summary, p.findings.map((f) => `- ${f.claim}${cite(f.sources.map(scoped))}`).join("\n"));
     if (p.key_numbers?.length) out.push(["| | | |", "|---|---|---|", ...p.key_numbers.map((k) => `| ${esc(k.label)} | **${esc(k.value)}** | ${k.source ? `\`${scoped(k.source)}\`` : ""} |`)].join("\n"));
   }
 

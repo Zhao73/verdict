@@ -1,3 +1,4 @@
+import { languageName } from "../i18n/index.mjs";
 // Who does what. Deep mode: four research desks in parallel → bull and bear in parallel →
 // portfolio manager. Fast mode: one combined desk → portfolio manager.
 
@@ -39,7 +40,13 @@ const COMMON = `You are part of Verdict, an equity research team. Rules:
 - Be specific and concise: dates, figures, direction. No filler, no restating the snapshot.`;
 
 export function languageLine(language) {
-  return `Write all prose in ${language}. Keep JSON keys, enum values, IDs, tickers and numbers as they are.`;
+  return `Write all prose in ${languageName(language)}. Keep JSON keys, enum values, IDs, tickers and numbers as they are; write price-level actions in that language too.`;
+}
+
+function marketLine(run) {
+  const m = run.market;
+  if (!m || m.code === "US") return "";
+  return `\n\nMarket: this listing trades in ${m.country} (${m.exchange}) in ${m.currency}. Use its primary filings (${m.filings}), note the accounting standard (${m.standard}), keep figures in the reporting currency and say when you convert. Read local-language sources where they are primary (exchange filings, local financial press, investor-relations pages); a US ADR or another listing is a different line with its own price.`;
 }
 
 function intentLine(run) {
@@ -50,7 +57,7 @@ export function deskPrompt({ desk, snapshotText, run }) {
   const d = DESKS[desk];
   const route = ROUTE[run.instrument?.route];
   return {
-    system: `${COMMON}\n\nYou are the "${d.title.en}" desk. ${d.brief}${route ? `\n\n${route}` : ""}${intentLine(run)}`,
+    system: `${COMMON}\n\nYou are the "${d.title.en}" desk. ${d.brief}${route ? `\n\n${route}` : ""}${marketLine(run)}${intentLine(run)}`,
     user: [
       `Stock: ${run.symbol}${run.name ? ` (${run.name})` : ""}. Today: ${run.as_of}.`,
       run.question ? `The user asks: ${run.question}` : "",

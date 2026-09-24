@@ -23,8 +23,11 @@ hands out exact instructions per task and writes the report; you and your subage
 | quote / news / filings / options / snapshot + ticker, or "macro" | that data tool; summarise with dates. No research run. |
 | follow-up about an earlier verdict | `verdict_report` (ticker or latest) and answer from it; search only if it lacks the answer |
 
-Company names → ticker (Microsoft → MSFT, Tencent → 0700.HK, Toyota → 7203.T). Language: the
-language the user writes in.
+Any market works. Pass what the user wrote if it is a ticker or local code (NVDA, 0700.HK,
+600519, 7203, 005930, SAP.DE, BHP.AX, TYO:7203) — the server resolves it; for a company name use
+the home listing (腾讯 → 0700.HK, 台積電 → 2330.TW, トヨタ → 7203.T, 삼성전자 → 005930.KS,
+LVMH → MC.PA, BHP → BHP.AX for an Australian user). Language: the language the user writes in
+(en, zh-CN, zh-TW, ja, ko, fr, de, es, it, pt, nl, or any other code).
 
 ## Deep research (default)
 

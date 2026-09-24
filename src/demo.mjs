@@ -16,6 +16,7 @@ export function demoSnapshot() {
     symbol: SYMBOL,
     as_of: new Date().toISOString(),
     instrument: { symbol: SYMBOL, name: "Acme Robotics (fictional demo)", type: "equity", route: "operating_company", exchange: "DEMO", cik: null, gaps: [] },
+    market: { code: "US", country: "United States", exchange: "DEMO", currency: "USD", filings: "fictional", standard: "US GAAP" },
     quote: { symbol: SYMBOL, price, currency: "USD", change_pct: 1.84, market_time: new Date().toISOString(), high_52w: 196.4, low_52w: 112.3, dividend_yield_pct: 0.4, source: { title: "Demo quote (fictional)", url: "https://example.com/demo/quote" } },
     technicals: { available: true, return_1m_pct: 6.2, return_3m_pct: 14.8, return_12m_pct: 41.5, momentum_12_1_pct: 33.1, pct_vs_sma50: 4.1, pct_vs_sma200: 17.9, sma50: price / 1.041, sma200: price / 1.179, rsi14: 61.4, realized_vol_30d_pct: 31.2, pct_from_52w_high: -6.3, max_drawdown_1y_pct: -22.4, volume_20d_vs_3m: 1.3 },
     series,

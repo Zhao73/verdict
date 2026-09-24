@@ -15,6 +15,7 @@ export async function startHostRun({ symbol, mode = "deep", language = "en", que
   const run = createRun({ symbol, mode, language, question, engine: host });
   run.snapshot = snapshot || (await buildSnapshot(run.symbol));
   run.name = run.snapshot.instrument?.name || null;
+  run.market = run.snapshot.market || null;
   saveMeta(run);
   writeJson(join(runDir(run.run_id), "snapshot.json"), run.snapshot);
   return run;

@@ -14,7 +14,9 @@
   <a href="#10-秒试用">试用</a> ·
   <a href="#全屏应用">全屏应用</a> ·
   <a href="#claude-code-与-codex">Claude Code 与 Codex</a> ·
-  <a href="README.md">English</a>
+  <a href="README.md">English</a> ·
+  <a href="README.ja.md">日本語</a> ·
+  <a href="README.ko.md">한국어</a>
 </p>
 
 <p align="center">
@@ -49,6 +51,31 @@
 5. **报告**：由代码根据保存下来的结果拼装，任何内容都不会在总结时丢失。
 
 `--fast` 只做一轮研究就直接给结论，大约一分钟。
+
+## 多语言与全球市场
+
+用你的语言提问，问哪个市场都可以。Verdict 会用你提问时的语言作答（也可以用 `--lang` 指定），界面、报告和 HTML 页面都会跟着切换。
+
+| 语言 | English · 简体中文 · 繁體中文 · 日本語 · 한국어 · Français · Deutsch · Español · Italiano · Português · Nederlands —— 其他语言代码也能用，模型会用该语言写作，界面标签则回退为英文 |
+|---|---|
+
+| 市场 | 写法 | 研究台查阅的公告来源 | 本地新闻 |
+|---|---|---|---|
+| 🇺🇸 美股 | `NVDA` · `BRK-B` | SEC EDGAR（快照含 XBRL 财务数据） | Google News 美国版 |
+| 🇨🇳 A 股 | `600519` · `SH600519` · 贵州茅台 | 巨潮资讯 CNINFO | 简体中文 |
+| 🇭🇰 港股 | `0700.HK` · `0700` · 腾讯 / 騰訊 | 披露易 HKEXnews | 繁體中文 |
+| 🇹🇼 台股 | `2330.TW` · 台積電 | 公開資訊觀測站 MOPS | 繁體中文 |
+| 🇯🇵 日股 | `7203.T` · `7203` · `TYO:7203` · トヨタ | EDINET / TDnet | 日本語 |
+| 🇰🇷 韩股 | `005930.KS` · `KRX:005930` · 삼성전자 | DART 전자공시 | 한국어 |
+| 🇬🇧 英股 | `SHEL.L` · `LON:SHEL` | RNS / Companies House（便士自动换算为英镑） | en-GB |
+| 🇪🇺 欧股 | `MC.PA` · `SAP.DE` · `ASML.AS` · `SAN.MC` · `ENI.MI` · `NESN.SW` … | 各国监管机构 / 公司投资者关系 | 当地版本 |
+| 🇦🇺 澳股 · 新西兰 | `BHP.AX` · `ASX:BHP` · Commonwealth Bank | ASX / NZX 公告 | en-AU · en-NZ |
+| 🇨🇦 🇮🇳 🇸🇬 🇧🇷 🇲🇽 | `SHOP.TO` · `RELIANCE.NS` · `D05.SI` · `PETR4.SA` | SEDAR+ · NSE/BSE · SGXNet · CVM | 当地版本 |
+
+公司名可以直接用当地语言输入（腾讯、台積電、トヨタ、삼성전자、LVMH、Commonwealth Bank……）。
+如果一家公司在美国也有上市（比如 ADR），而你的语言或系统区域属于它的本土市场，Verdict 会优先选本土上市代码：
+德语用户问 SAP 得到的是 `SAP.DE`，系统区域为澳大利亚时 BHP 对应 `BHP.AX`；其他情况则用美股代码。
+美股快照包含完整的 SEC 财务数据；其他市场的快照包含价格、历史走势、技术面和本地新闻，研究台会去读上表列出的本地公告。
 
 ## 安装
 
@@ -140,7 +167,7 @@ codex plugin add verdict@verdict
 
 ```bash
 git clone https://github.com/Zhao73/verdict && cd verdict && npm install
-npm test          # 45 个测试，全部离线
+npm test          # 56 个测试，全部离线
 npm run shots     # 用真实的渲染代码重新生成 README 截图
 ```
 

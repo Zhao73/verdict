@@ -14,7 +14,9 @@
   <a href="#try-it-in-10-seconds">Demo</a> ·
   <a href="#the-app">The app</a> ·
   <a href="#claude-code--codex">Claude Code &amp; Codex</a> ·
-  <a href="README.zh-CN.md">中文</a>
+  <a href="README.zh-CN.md">简体中文</a> ·
+  <a href="README.ja.md">日本語</a> ·
+  <a href="README.ko.md">한국어</a>
 </p>
 
 <p align="center">
@@ -52,6 +54,34 @@ Ask about a stock the way you would ask a colleague — `verdict NVDA`, `verdict
 5. **Report** — assembled by code from the saved results, so nothing gets lost in a summary.
 
 `--fast` runs one research pass and the decision (about a minute).
+
+## Languages & markets
+
+Ask in your language, about any market. Verdict answers in the language you type in (or `--lang`),
+and the interface, report and HTML page follow it.
+
+| Languages | English · 简体中文 · 繁體中文 · 日本語 · 한국어 · Français · Deutsch · Español · Italiano · Português · Nederlands — other codes work too; models write in them and labels fall back to English |
+|---|---|
+
+| Market | Write it as | Filings the desks read | Local news |
+|---|---|---|---|
+| 🇺🇸 US | `NVDA` · `BRK-B` | SEC EDGAR (+ XBRL fundamentals in the snapshot) | Google News US |
+| 🇨🇳 China A-shares | `600519` · `SH600519` · 贵州茅台 | CNINFO 巨潮资讯 | 简体中文 |
+| 🇭🇰 Hong Kong | `0700.HK` · `0700` · 腾讯 / 騰訊 | HKEXnews 披露易 | 繁體中文 |
+| 🇹🇼 Taiwan | `2330.TW` · 台積電 | MOPS 公開資訊觀測站 | 繁體中文 |
+| 🇯🇵 Japan | `7203.T` · `7203` · `TYO:7203` · トヨタ | EDINET / TDnet | 日本語 |
+| 🇰🇷 Korea | `005930.KS` · `KRX:005930` · 삼성전자 | DART 전자공시 | 한국어 |
+| 🇬🇧 UK | `SHEL.L` · `LON:SHEL` | RNS / Companies House (pence converted to £) | en-GB |
+| 🇪🇺 Europe | `MC.PA` · `SAP.DE` · `ASML.AS` · `SAN.MC` · `ENI.MI` · `NESN.SW` · `NOVO-B.CO` … | national regulators / company IR | local edition |
+| 🇦🇺 Australia · NZ | `BHP.AX` · `ASX:BHP` · Commonwealth Bank | ASX / NZX announcements | en-AU · en-NZ |
+| 🇨🇦 🇮🇳 🇸🇬 🇧🇷 🇲🇽 | `SHOP.TO` · `RELIANCE.NS` · `D05.SI` · `PETR4.SA` | SEDAR+ · NSE/BSE · SGXNet · CVM | local edition |
+
+Company names are understood in their home languages (腾讯, 台積電, トヨタ, 삼성전자, LVMH,
+Commonwealth Bank …). When a name also trades in the US, Verdict picks the home listing if your
+language or locale is from that market (a German asking about SAP gets `SAP.DE`; an Australian
+locale gets `BHP.AX`), otherwise the US line. The keyless snapshot has full SEC fundamentals for
+US listings; for other markets it has price, history, technicals and local news, and the desks read
+the local filings listed above.
 
 ## Install
 
@@ -165,11 +195,11 @@ the gap. Set `VERDICT_SEC_CONTACT=you@example.com` — the SEC asks for a contac
 
 ```bash
 git clone https://github.com/Zhao73/verdict && cd verdict && npm install
-npm test          # 45 tests, offline: fixtures, a scripted engine and a fake `claude`
+npm test          # 56 tests, offline: fixtures, a scripted engine and a fake `claude`
 npm run shots     # regenerate the README images from the real renderers
 ```
 
-`src/engine` research engine · `src/models` api and claude engines · `src/tui` full-screen app ·
+`src/engine` research engine (markets, names, data, pipeline) · `src/i18n` eleven locales · `src/models` api and claude engines · `src/tui` full-screen app ·
 `src/cli` commands and stream mode · `src/render` Markdown / HTML / terminal · `src/mcp` plugin
 server. The engine, MCP server and renderers have no dependencies, so the plugins run straight from
 a checkout. See [CHANGELOG.md](CHANGELOG.md).

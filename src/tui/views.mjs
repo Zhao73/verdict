@@ -2,7 +2,7 @@
 // stream mode prints them. Every function takes the content width.
 
 import { readFileSync } from "node:fs";
-import { deskTitle, t } from "../engine/i18n.mjs";
+import { deskTitle, ratingLabel, stanceLabel, t } from "../engine/i18n.mjs";
 import { DESKS } from "../engine/prompts.mjs";
 import { reportPath } from "../engine/pipeline.mjs";
 import { upside } from "../render/markdown.mjs";
@@ -43,10 +43,12 @@ export function wordmark() {
 export function welcomeLines(w, { language, recent = [], track = null }) {
   const S = strings(language);
   const out = ["", ...wordmark().map((l) => `  ${l}`), `  ${tone.dim(S.tagline)}`, "", `  ${heading(S.quick)}`];
-  for (const tip of S.tips) out.push(`   ${tone.accent("›")} ${tone.text(tip)}`);
+  const cmds = ["NVDA", S.tipQuestion, "/fast AAPL", "/compare NVDA AMD AVGO", "/watch NVDA · /track"];
+  const cw = Math.max(...cmds.map((x) => width(x))) + 2;
+  cmds.forEach((cmd, i) => out.push(`   ${tone.accent("›")} ${pad(tone.ink(cmd), cw)}${tone.dim(S.tips[i] || "")}`));
   if (recent.length) {
     out.push("", `  ${heading(S.recent)}`);
-    for (const r of recent.slice(0, 6)) out.push(`   ${pad(tone.strong(r.symbol), 10)} ${pad(r.rating ? paint(r.rating, ratingTone(r.rating)) : tone.dim(r.state), 12)} ${tone.dim(`${r.created_at.slice(0, 10)} · ${truncate(r.name || "", Math.max(8, w - 40))}`)}`);
+    for (const r of recent.slice(0, 6)) out.push(`   ${pad(tone.strong(r.symbol), 10)} ${pad(r.rating ? paint(ratingLabel(r.rating, language), ratingTone(r.rating)) : tone.dim(r.state), 16)} ${tone.dim(`${r.created_at.slice(0, 10)} · ${truncate(r.name || "", Math.max(8, w - 40))}`)}`);
   }
   if (track?.count) out.push("", `  ${heading(S.track)}`, `   ${S.hitRate} ${tone.strong(`${track.hit_rate}%`)} ${tone.dim(`(${track.count})`)}${track.avg_return_bullish === null ? "" : `  ·  Buy/OW ${S.since} ${colored(track.avg_return_bullish, signed(track.avg_return_bullish))}`}`);
   return out;
@@ -72,7 +74,8 @@ export function snapshotLines(s, w, language) {
   if (!s) return [];
   const i = s.instrument || {};
   const q = s.quote;
-  const out = [`${tone.strong(s.symbol)} ${tone.text(truncate(i.name || "", 40))} ${tone.dim([i.exchange, i.type !== "unknown" ? i.type : null].filter(Boolean).join(" · "))}`];
+  const mk = s.market && s.market.code !== "US" ? `${s.market.code} · ${s.market.exchange}` : i.exchange;
+  const out = [`${tone.strong(s.symbol)} ${tone.text(truncate(i.name || "", 40))} ${tone.dim([mk, i.type !== "unknown" ? i.type : null].filter(Boolean).join(" · "))}`];
   if (q) out.push(`${paint(`${q.price} ${q.currency}`, { fg: "ink", bold: true })} ${colored(q.change_pct, signed(q.change_pct, 2))}  ${tone.dim(`52w ${q.low_52w}–${q.high_52w}`)}  ${sparkline(s.series, Math.min(40, w - 45))}`);
   const tech = s.technicals;
   const r = s.fundamentals?.ratios || {};
@@ -114,7 +117,7 @@ export function liveLines(job, w, { tick = 0 } = {}) {
       const time = tk.startedAt ? mmss((tk.endedAt || Date.now()) - tk.startedAt) : "";
       let tail = "";
       if (tk.status === "running") tail = tone.dim(tk.activity || S.thinking);
-      else if (tk.status === "done") tail = tk.note ? paint(tk.note, stanceTone(tk.note) === "dim" ? ratingTone(tk.note) : stanceTone(tk.note)) : "";
+      else if (tk.status === "done") tail = tk.note ? paint(stanceTone(tk.note) === "dim" ? ratingLabel(tk.note, job.language) : stanceLabel(tk.note, job.language), stanceTone(tk.note) === "dim" ? ratingTone(tk.note) : stanceTone(tk.note)) : "";
       else if (tk.status === "failed") tail = tone.bear(tk.error || "");
       else tail = tone.faint(S.waiting);
       out.push(` ${tone.faint(last ? "└" : "├")} ${icon} ${pad(tone.text(truncate(it.label, 20)), 20)} ${tone.dim(pad(time, 5))} ${truncate(tail, Math.max(10, w - 34))}`);
@@ -122,7 +125,7 @@ export function liveLines(job, w, { tick = 0 } = {}) {
   }
   if (job.draft) {
     out.push("", heading(S.draft));
-    if (job.draftRating) out.push(` ${chip(job.draftRating)}`);
+    if (job.draftRating) out.push(` ${chip(job.draftRating, ratingLabel(job.draftRating, job.language))}`);
     out.push(...para(job.draft, w - 2, 1, tone.ink));
   }
   const secs = mmss((job.endedAt || Date.now()) - job.startedAt);
@@ -174,7 +177,7 @@ export function verdictLines(run, w) {
     return out;
   }
   const up = upside(run);
-  out.push(`${head}`, "", ` ${chip(d.rating)}  ${tone.dim(`${S.confidence}`)} ${tone.strong(L.levels[d.confidence] || d.confidence)}${up === null ? "" : `   ${tone.dim(L.basev)} ${colored(up, signed(up, 0))}`}${q ? `   ${tone.dim(`${q.price} ${q.currency}`)}` : ""}`);
+  out.push(`${head}`, "", ` ${chip(d.rating, ratingLabel(d.rating, run.language))}  ${tone.dim(`${S.confidence}`)} ${tone.strong(L.levels[d.confidence] || d.confidence)}${up === null ? "" : `   ${tone.dim(L.basev)} ${colored(up, signed(up, 0))}`}${q ? `   ${tone.dim(`${q.price} ${q.currency}`)}` : ""}`);
   out.push("", ...para(d.conclusion, w - 2, 1, tone.ink));
   out.push("", heading(`${S.value} · ${d.valuation.currency}`), ...valueBar(d, q?.price, Math.min(w, 90)), ...para(d.valuation.method, w - 2, 1, tone.dim));
   const zone = zoneFor(d.price_levels, q?.price);
@@ -281,7 +284,7 @@ export function compareLines(cmp, w, { tick = 0 } = {}) {
     const job = cmp.jobs[sym];
     const run = job?.run;
     const k = rank.get(sym);
-    const status = run ? chip(run.decision?.rating || run.state) : `${tone.accent(SPIN[tick % SPIN.length])} ${tone.dim(job?.stage || "…")}`;
+    const status = run ? chip(run.decision?.rating || run.state, run.decision ? ratingLabel(run.decision.rating, cmp.language) : run.state) : `${tone.accent(SPIN[tick % SPIN.length])} ${tone.dim(job?.stage || "…")}`;
     const up = run ? upside(run) : null;
     out.push(` ${tone.accent(pad(k ? `#${k.rank}` : "", 4))}${pad(tone.strong(sym), 10)} ${pad(status, 16)} ${pad(run?.snapshot?.quote ? tone.text(String(run.snapshot.quote.price)) : "", 10)} ${run ? colored(up, signed(up, 0)) : ""}`);
     if (k?.why) out.push(...para(k.why, w - 16, 15, tone.dim));
@@ -296,7 +299,7 @@ export function trackLines(track, w, language) {
   const out = [heading(S.track), ""];
   if (!track.count) return [...out, tone.dim(" —")];
   out.push(` ${S.hitRate} ${tone.strong(`${track.hit_rate}%`)} ${tone.dim(`· ${track.count}`)}${track.avg_return_bullish === null ? "" : `   Buy/OW ${colored(track.avg_return_bullish, signed(track.avg_return_bullish))}`}`, "");
-  for (const r of track.rows.slice(0, Math.max(5, 200))) out.push(` ${tone.dim(r.date)}  ${pad(tone.strong(r.symbol), 9)} ${pad(paint(r.rating, ratingTone(r.rating)), 12)} ${pad(tone.text(`${r.then} → ${r.now}`), 22)} ${colored(r.return_pct, signed(r.return_pct))} ${r.hit ? tone.bull("✓") : tone.bear("✕")}`);
+  for (const r of track.rows.slice(0, 200)) out.push(` ${tone.dim(r.date)}  ${pad(tone.strong(r.symbol), 9)} ${pad(paint(ratingLabel(r.rating, language), ratingTone(r.rating)), 16)} ${pad(tone.text(`${r.then} → ${r.now}`), 22)} ${colored(r.return_pct, signed(r.return_pct))} ${r.hit ? tone.bull("✓") : tone.bear("✕")}`);
   return out;
 }
 
