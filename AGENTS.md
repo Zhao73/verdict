@@ -19,6 +19,15 @@ the terminal (`bin/verdict.mjs`), a Claude Code plugin and a Codex plugin.
   detects the language from what people type. A new label must be added to every locale (tested).
 - `src/engine/markets.mjs` + `names.mjs` — exchange suffixes, local codes (600519, 0700, 2330,
   7203, 005930, TYO:7203), currencies, filing sources, news editions and local company names.
+- `src/engine/methods.mjs` — the Verdict methods (docs/METHODS.md): priced-in growth, options-implied
+  move and tape in the snapshot (`method:<id>`); zone odds, payoff, evidence balance, audit and the
+  Verdict Score in `run.analytics`, computed by `finishRun`. `src/render/methods.mjs` turns them
+  into display rows for every surface. They audit the verdict; they never change the rating.
+- `src/engine/config.mjs` — saved settings (`~/.verdict/config.json`: language, engine, mode) behind
+  `verdict lang`, `verdict config` and `/lang`. Flags win over settings; a saved language wins over
+  detection.
+- Windows is a first-class target: no shell spawning (`resolveClaude` finds claude.exe or reads
+  the claude.cmd shim), paths through `node:path`, CI runs Windows on Node 20/22/24.
 
 ## Rules
 

@@ -3,12 +3,49 @@
 // Claude Code's WebSearch/WebFetch. No MCP servers are started, which keeps start-up fast.
 
 import { spawn, spawnSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
+import { win32 } from "node:path";
 
 export const CLAUDE_MODELS = { research: "sonnet", debate: "sonnet", decision: "opus", chat: "sonnet" };
 
 export function claudeBin(env = process.env) {
-  return env.VERDICT_CLAUDE_BIN || "claude";
+  return resolveClaude(env.VERDICT_CLAUDE_BIN || "claude", { env });
+}
+
+/**
+ * On Windows, `claude` is either claude.exe (native installer) or an npm shim, claude.cmd,
+ * which Node cannot spawn without a shell (and a shell would mangle the JSON arguments). Find
+ * the .exe, or read the shim for the script or binary it runs.
+ */
+export function resolveClaude(bin, { platform = process.platform, env = process.env, exists = existsSync, read = (f) => readFileSync(f, "utf8") } = {}) {
+  if (platform !== "win32" || /\.(c|m)?js$/i.test(bin) || (/\.exe$/i.test(bin) && /[\\/]/.test(bin))) return bin;
+  const named = /[\\/]/.test(bin);
+  const name = win32.basename(bin).replace(/\.(cmd|exe|bat|ps1)$/i, "");
+  const home = env.USERPROFILE || env.HOME || "";
+  const dirs = named ? [win32.dirname(bin)] : [
+    ...String(env.PATH || env.Path || "").split(";").filter(Boolean),
+    home && win32.join(home, ".local", "bin"),
+    env.APPDATA && win32.join(env.APPDATA, "npm"),
+  ].filter(Boolean);
+  for (const dir of dirs) {
+    const exe = win32.join(dir, `${name}.exe`);
+    if (exists(exe)) return exe;
+    const shim = win32.join(dir, `${name}.cmd`);
+    if (!exists(shim)) continue;
+    let text = "";
+    try {
+      text = read(shim);
+    } catch {
+      continue;
+    }
+    const targets = [...text.matchAll(/%~?dp0%?\\([^"\r\n]+?\.(?:c|m)?js|[^"\r\n]+?\.exe)"/gi)].map((m) => win32.join(dir, m[1]));
+    const target = targets.find((t) => !/node\.exe$/i.test(t) && exists(t));
+    if (target) return target;
+    const cli = win32.join(dir, "node_modules", "@anthropic-ai", "claude-code", "cli.js");
+    if (exists(cli)) return cli;
+  }
+  return bin;
 }
 
 function launch(bin, args, opts) {

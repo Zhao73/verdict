@@ -4,10 +4,12 @@ import { copyFileSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { selectBackend } from "../models/index.mjs";
-import { hasClaudeCli } from "../models/claude.mjs";
+import { claudeBin, hasClaudeCli } from "../models/claude.mjs";
 import { compare, compareRows } from "../engine/compare.mjs";
 import * as data from "../engine/data.mjs";
+import { chosenLanguage, readConfig, resetConfig, setConfig } from "../engine/config.mjs";
 import { detectLanguage, normalizeLanguage } from "../engine/i18n.mjs";
+import { LANGUAGE_CODES, LOCALES } from "../i18n/index.mjs";
 import { ask, htmlPath, loadRun, recentRun, reportPath, research } from "../engine/pipeline.mjs";
 import { buildSnapshot } from "../engine/snapshot.mjs";
 import { homeDir, listRuns, resolveRun } from "../engine/store.mjs";
@@ -16,6 +18,7 @@ import { addWatch, removeWatch, trackRecord, watchlist, watchStatus } from "../e
 import { page, pad, renderMarkdown, truncate } from "../render/terminal.mjs";
 import { strings } from "../tui/strings.mjs";
 import { chip, paint, ratingTone, tone } from "../tui/theme.mjs";
+import { methodView } from "../render/methods.mjs";
 import { compareLines, heading, snapshotLines, trackLines, verdictLines, wordmark } from "../tui/views.mjs";
 import { createStream } from "./stream.mjs";
 
@@ -47,11 +50,16 @@ function help() {
     "",
     heading("DATA (no model calls)"),
     cmd("verdict quote|snapshot|news|filings|options|lenses NVDA", "live data"),
+    cmd("verdict methods NVDA", "Verdict methods: priced-in growth, options-implied move, tape"),
     cmd("verdict macro · doctor [--live] · mcp", "macro · setup check · MCP server"),
     "",
+    heading("SETTINGS"),
+    cmd("verdict lang [ja|zh-CN|auto]", "pick the language (saved; auto = the language you type in)"),
+    cmd("verdict config [engine api|claude] [mode fast]", "saved defaults · verdict config reset"),
+    "",
     heading("OPTIONS"),
-    cmd("--fast · --deep", "research depth (deep is the default)"),
-    cmd("--lang <code>", "en zh-CN zh-TW ja ko fr de es it pt nl (default: the language you type in)"),
+    cmd("--fast · --deep", "research depth (deep unless `verdict config mode fast`)"),
+    cmd("--lang <code>", "en zh-CN zh-TW ja ko fr de es it pt nl (this run only)"),
     cmd("--engine api|claude", "api = ANTHROPIC_API_KEY (fastest) · claude = your Claude Code login"),
     cmd("--model · --research-model · --decision-model", "override models"),
     cmd("--fresh · --json · --plain", "ignore a recent verdict · JSON output · no live redraw"),
@@ -83,7 +91,20 @@ function modelsFrom(args) {
   return m;
 }
 
-const backendFor = (args) => selectBackend({ engine: args.engine, models: modelsFrom(args) });
+const configured = (key) => {
+  const v = readConfig()[key];
+  return v === "auto" ? undefined : v;
+};
+
+const backendFor = (args) => selectBackend({ engine: args.engine || configured("engine"), models: modelsFrom(args) });
+
+/** --lang, else the language saved with `verdict lang`, else the language of the text, else the system's. */
+function pickLanguage(args, text = "") {
+  if (args.lang) return normalizeLanguage(args.lang);
+  return chosenLanguage() || detectLanguage(text);
+}
+
+const modeOf = (args) => (args.fast ? "fast" : args.deep ? "deep" : readConfig().mode);
 
 function banner(parts) {
   out(`${paint(" ◆ VERDICT ", { fg: "onAccent", bg: "accent", bold: true })} ${tone.dim(parts.filter(Boolean).join(" · "))}`);
@@ -126,11 +147,11 @@ async function followUps(run, args) {
 }
 
 async function cmdResearch(args, words) {
-  const target = await resolveTarget(words);
-  const S = strings(args.lang ? normalizeLanguage(args.lang) : detectLanguage(words.join(" ")));
+  const target = await resolveTarget(words, { language: args.lang ? normalizeLanguage(args.lang) : chosenLanguage() || undefined });
+  const S = strings(pickLanguage(args, words.join(" ")));
   if (!target) throw new Error(S.noTicker);
-  const language = args.lang ? normalizeLanguage(args.lang) : detectLanguage(target.question || words.join(" "));
-  const mode = args.fast ? "fast" : "deep";
+  const language = pickLanguage(args, target.question || words.join(" "));
+  const mode = modeOf(args);
   const recent = !args.fresh && !target.question ? recentRun({ symbol: target.symbol, mode, language }) : null;
   if (recent) {
     const run = loadRun(recent.run_id);
@@ -172,7 +193,7 @@ async function cmdCompare(args) {
   const symbols = args._;
   if (symbols.length < 2) throw new Error("usage: verdict compare NVDA AMD [AVGO …] [--deep]");
   const backend = await backendFor(args);
-  const language = args.lang ? normalizeLanguage(args.lang) : detectLanguage();
+  const language = pickLanguage(args);
   const mode = args.deep ? "deep" : "fast";
   if (!args.json) banner([`compare ${symbols.join(" ").toUpperCase()}`, mode, backend.name]);
   const cmp = { symbols: symbols.map((s) => s.toUpperCase()), language, jobs: {}, ranking: null };
@@ -235,7 +256,7 @@ async function cmdWatch(args) {
 async function cmdTrack(args) {
   const t = await trackRecord();
   if (args.json) return out(JSON.stringify(t, null, 2));
-  for (const l of trackLines(t, W(), detectLanguage())) out(` ${l}`);
+  for (const l of trackLines(t, W(), pickLanguage(args))) out(` ${l}`);
   return undefined;
 }
 
@@ -295,7 +316,7 @@ async function cmdData(cmd, args) {
   if (!target) throw new Error(`usage: verdict ${cmd} NVDA`);
   const sym = target.symbol;
   if (cmd === "snapshot") {
-    for (const l of snapshotLines(await buildSnapshot(sym), W(), detectLanguage())) out(` ${l}`);
+    for (const l of snapshotLines(await buildSnapshot(sym), W(), pickLanguage(args))) out(` ${l}`);
   } else if (cmd === "quote") {
     const q = await data.getQuote(sym);
     out(` ${tone.strong(sym)} ${paint(`${q.price} ${q.currency}`, { fg: "ink", bold: true })} ${paint(`${q.change_pct >= 0 ? "+" : ""}${q.change_pct}%`, q.change_pct >= 0 ? "bull" : "bear")}  ${tone.dim(`52w ${q.low_52w}–${q.high_52w} · div ${n(q.dividend_yield_pct)}% · ${q.exchange} · delayed`)}`);
@@ -321,7 +342,50 @@ async function cmdData(cmd, args) {
       out(`${" ".repeat(15)}${tone.dim(l.checks.map((x) => `${x.label} ${x.display}${x.pass === null ? "" : x.pass ? " ✓" : " ✗"}`).join(" · ") || l.rationale)}`);
     }
     if (s.gaps.length) out(tone.hold(`⚠ ${s.gaps.join("; ")}`));
+  } else if (cmd === "methods") {
+    const s = await buildSnapshot(sym, { news: false });
+    const language = pickLanguage(args);
+    const mv = methodView({ language, snapshot: s, desks: {} });
+    out(` ${heading(mv.title.toUpperCase())} ${tone.strong(sym)}`);
+    for (const r of mv.rows) out(` ${paint("▸", r.tone)} ${pad(tone.dim(r.label), 26)}${tone.text(r.text)}`);
+    for (const [id, m] of Object.entries(s.methods)) if (!m.available) out(` ${tone.faint("·")} ${pad(tone.faint(id), 26)}${tone.faint(m.reason)}`);
+    out(tone.faint(` ${mv.note}`));
   }
+}
+
+/** `verdict lang` lists and picks; `verdict lang ja` saves; `verdict lang auto` follows what you type. */
+async function cmdLang(args) {
+  const options = ["auto", ...LANGUAGE_CODES];
+  const current = readConfig().language;
+  let pick = args._[0];
+  if (!pick) {
+    const S = strings(chosenLanguage() || detectLanguage());
+    out(` ${heading(S.language)}`);
+    options.forEach((code, i) => out(`  ${tone.accent(pad(String(i + 1), 3))}${pad(tone.strong(code === "auto" ? S.langAuto : LOCALES[code].native), 34)}${tone.dim(code)}${code === current ? tone.accent("  ✓") : ""}`));
+    if (!process.stdin.isTTY) return out(tone.faint("\n verdict lang <code>"));
+    const rl = createInterface({ input: process.stdin, output: process.stdout });
+    const answer = (await rl.question(`\n${tone.accent("❯")} `)).trim();
+    rl.close();
+    if (!answer) return undefined;
+    pick = options[Number(answer) - 1] || answer;
+  }
+  const next = setConfig("language", pick);
+  const S = strings(next.language === "auto" ? detectLanguage() : next.language);
+  return out(` ${tone.bull("✓")} ${S.langSaved}: ${tone.strong(next.language === "auto" ? S.langAuto : LOCALES[next.language]?.native || next.language)}`);
+}
+
+/** `verdict config` shows settings; `verdict config <key> <value>` saves one; `reset` restores defaults. */
+function cmdConfig(args) {
+  const [key, value] = args._;
+  let cfg;
+  if (key === "reset") cfg = resetConfig();
+  else if (key && value !== undefined) cfg = setConfig(key, value);
+  else if (key) throw new Error("usage: verdict config [language|engine|mode] <value> · verdict config reset");
+  else cfg = readConfig();
+  out(` ${heading("SETTINGS")} ${tone.faint(join(homeDir(), "config.json"))}`);
+  const hint = { language: `auto ${LANGUAGE_CODES.join(" ")}`, engine: "auto api claude", mode: "deep fast" };
+  for (const [k, v] of Object.entries(cfg)) out(`  ${pad(tone.dim(k), 12)}${pad(tone.strong(v), 10)}${tone.faint(hint[k] || "")}`);
+  return undefined;
 }
 
 async function cmdDoctor(args) {
@@ -330,11 +394,16 @@ async function cmdDoctor(args) {
   const info = (m) => out(` ${tone.dim("·")} ${m}`);
   banner(["doctor", `v${VERSION}`]);
   const major = Number(process.versions.node.split(".")[0]);
-  (major >= 20 ? ok : bad)(`Node ${process.versions.node} (20+)`);
+  (major >= 20 ? ok : bad)(`Node ${process.versions.node} (20+) · ${process.platform} ${process.arch}`);
+  if (process.platform === "win32") {
+    const wt = Boolean(process.env.WT_SESSION);
+    (wt ? ok : info)(wt ? "Windows Terminal: full color, mouse and the full-screen app" : "For the full-screen app use Windows Terminal (winget install Microsoft.WindowsTerminal); the classic console works with fewer colors");
+  }
+  out(tone.faint(`   data: ${homeDir()} · settings: language ${readConfig().language} · engine ${readConfig().engine} · mode ${readConfig().mode}`));
   const key = Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
   (key ? ok : info)(`api engine: ${key ? "ANTHROPIC_API_KEY set" : "no ANTHROPIC_API_KEY (optional, fastest)"}`);
   const cli = hasClaudeCli();
-  (cli ? ok : info)(`claude engine: ${cli || "Claude Code not found (optional)"}`);
+  (cli ? ok : info)(`claude engine: ${cli ? `${cli} · ${claudeBin()}` : "Claude Code not found (optional)"}`);
   if (!key && !cli) bad("no engine: set ANTHROPIC_API_KEY or install Claude Code");
   for (const [name, fn] of [
     ["Yahoo Finance · quotes, history, search", () => data.getQuote("AAPL")],
@@ -371,7 +440,7 @@ export async function main(argv = process.argv.slice(2)) {
   if (!cmd) {
     if (!process.stdin.isTTY || !process.stdout.isTTY) return out(help());
     const { App } = await import("../tui/app.mjs");
-    const app = new App({ language: args.lang, engine: args.engine, models: modelsFrom(args) });
+    const app = new App({ language: args.lang, engine: args.engine || configured("engine"), models: modelsFrom(args) });
     await app.start();
     return undefined;
   }
@@ -385,6 +454,8 @@ export async function main(argv = process.argv.slice(2)) {
     case "show": return cmdShow(sub);
     case "export": return cmdExport(sub);
     case "doctor": return cmdDoctor(sub);
+    case "config": case "settings": return cmdConfig(sub);
+    case "lang": case "language": return cmdLang(sub);
     case "mcp": return import("../mcp/server.mjs").then((m) => m.serve());
     case "demo": {
       // Offline, fictional company; `verdict demo --app` opens the full-screen app instead.
@@ -396,7 +467,7 @@ export async function main(argv = process.argv.slice(2)) {
       }
       return cmdResearch({ ...sub, engine: "demo", fresh: true }, ["ACME", ...sub._]);
     }
-    case "quote": case "snapshot": case "news": case "filings": case "options": case "lenses": case "macro":
+    case "quote": case "snapshot": case "news": case "filings": case "options": case "lenses": case "methods": case "macro":
       return cmdData(cmd, sub);
     default:
       return cmdResearch(args, args._);

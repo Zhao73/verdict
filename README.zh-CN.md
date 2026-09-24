@@ -12,8 +12,10 @@
 <p align="center">
   <a href="#安装">安装</a> ·
   <a href="#10-秒试用">试用</a> ·
+  <a href="#verdict-独家方法">独家方法</a> ·
   <a href="#全屏应用">全屏应用</a> ·
   <a href="#claude-code-与-codex">Claude Code 与 Codex</a> ·
+  <a href="#windows">Windows</a> ·
   <a href="README.md">English</a> ·
   <a href="README.ja.md">日本語</a> ·
   <a href="README.ko.md">한국어</a>
@@ -28,8 +30,9 @@
 像问同事一样提问：`verdict NVDA`、`verdict "0700.HK 现在贵吗？"`、`verdict AMD 财报前值得拿着吗`。大约三分钟后，你会拿到：
 
 - **结论**：买入 · 增持 · 持有 · 减持 · 卖出，附置信度，并直接回答你的问题。
+- **Verdict 评分（0–100）**：把价值、证据、基本面和走势合成一个分数，由代码计算，用来交叉检验评级。
 - **估值区间**：悲观 / 基准 / 乐观的每股价值、推导方法，以及现价距离基准价值有多远。
-- **价格条件**：什么价位回避、从哪里开始建仓、跌到哪里加仓，以及现价落在哪个区间。
+- **带概率的价格条件**：什么价位回避、从哪里开始建仓、跌到哪里加仓，现价落在哪个区间，以及 3 个月内触及每个区间的概率。
 - **多空双方的论证**：最强的做多理由和做空理由，以及最后谁胜出。
 - **后续关注点**：带日期的催化剂、按严重程度排序的风险、仓位计划，以及什么情况说明判断错了。
 - **可追溯的依据**：每条发现都能打开对应来源；缺失的数据会明确列出，绝不靠猜。
@@ -52,9 +55,31 @@
 
 `--fast` 只做一轮研究就直接给结论，大约一分钟。
 
+## Verdict 独家方法
+
+模型负责研究、辩论和做决策，**计算全部交给代码**。七种方法按固定规则计算：模型动笔之前先给论点定好框架，结论出来之后再逐条检验：
+
+| | | |
+|---|---|---|
+| **价格隐含的增长** | 反向 DCF：现价已经假设了未来 10 年多高的增长，再和公司过去的实际增速对比 | 之前 |
+| **期权隐含波动** | 期权市场定价的 ± 波动区间，以及它是否高于近期的实际波动 | 之前 |
+| **走势状态** | 趋势 × 波动组合成的市场状态，以及它对择时意味着什么 | 之前 |
+| **触及概率** | 3 个月内股价走到每个价位区间的概率 | 之后 |
+| **收益风险** | 情景加权价值、上行与下行空间、收益/风险比 | 之后 |
+| **证据天平** | 按来源质量给每条研究发现加权（公告 > 主流媒体 > 新闻标题） | 之后 |
+| **一致性检查** | 评级和证据、估值或收益风险方向相反时标出来 | 之后 |
+
+以上结果汇总成 **Verdict 评分**。评分不会改动评级；方向有冲突时，一致性检查会用 ⚠ 标出。公式、阈值和局限都写在 [docs/METHODS.zh-CN.md](docs/METHODS.zh-CN.md) 里。运行 `verdict methods NVDA` 可以直接看到前三项，不调用任何模型。
+
+<p align="center"><img src="assets/methods.svg" alt="Verdict 评分、带概率的价格区间和各项方法" width="100%"></p>
+
 ## 多语言与全球市场
 
-用你的语言提问，问哪个市场都可以。Verdict 会用你提问时的语言作答（也可以用 `--lang` 指定），界面、报告和 HTML 页面都会跟着切换。
+用你的语言提问，问哪个市场都可以。Verdict 默认用你提问时的语言作答，界面、报告和 HTML 页面都会跟着切换。
+
+想固定用某一种语言，设置一次就行：在终端运行 `verdict lang`（会列出带编号的语言清单）或 `verdict lang zh-CN`，在全屏应用里输入 `/lang`。设置会被保存，之后所有命令都用这个语言，直到你运行 `verdict lang auto` 改回自动。只想对某一次研究换语言，就加 `--lang`。
+
+<p align="center"><img src="assets/language.svg" alt="/lang 语言选择" width="80%"></p>
 
 | 语言 | English · 简体中文 · 繁體中文 · 日本語 · 한국어 · Français · Deutsch · Español · Italiano · Português · Nederlands —— 其他语言代码也能用，模型会用该语言写作，界面标签则回退为英文 |
 |---|---|
@@ -91,7 +116,19 @@ verdict doctor            # 检查 Node、引擎和各个数据源
 | **api** | 设置了 `ANTHROPIC_API_KEY` | 最快。使用官方 Anthropic SDK，支持流式输出和服务端网页搜索。 |
 | **claude** | 已安装并登录 Claude Code | 使用你的 Claude Code 订阅，每一步是一次无头 `claude -p` 调用。 |
 
-默认自动选择，也可以用 `--engine api|claude` 指定。
+默认自动选择，也可以用 `--engine api|claude` 临时指定，或用 `verdict config engine claude` 保存为默认。
+
+### Windows
+
+Verdict 可以直接在 Windows 10 / 11 上运行，不需要 WSL。
+
+```powershell
+winget install OpenJS.NodeJS.LTS            # Node 20 及以上
+npm install -g github:Zhao73/verdict
+verdict doctor
+```
+
+全屏应用建议在 **Windows Terminal** 里使用，真彩色、中日韩文字和鼠标滚轮都能正常显示；旧版控制台也能用，只是颜色少一些（256 色）。不管 Claude Code 是用官方安装程序装的（`claude.exe`）还是用 npm 装的（`claude.cmd`），Verdict 都能自动找到；装在特殊位置时，把 `VERDICT_CLAUDE_BIN` 设为它的路径即可。数据保存在 `%USERPROFILE%\.verdict`。
 
 ## 10 秒试用
 
@@ -126,7 +163,8 @@ verdict watch add NVDA AAPL           # 自选股提醒：价格进入某个区�
 verdict track                         # 历史结论之后的实际表现
 verdict ask NVDA "如果加息呢？"
 verdict history · verdict show NVDA · verdict export NVDA
-verdict quote|snapshot|news|filings|options|lenses NVDA · verdict macro     # 只看数据，不调用模型
+verdict quote|snapshot|news|filings|options|lenses|methods NVDA · verdict macro   # 只看数据，不调用模型
+verdict lang zh-CN · verdict config mode fast      # 保存设置
 ```
 
 结论出来后可以当场继续追问。6 小时内再查同一只股票，会直接复用已有结论，加 `--fresh` 可以重新研究。`--json` 会输出完整结果，方便写脚本。
@@ -167,7 +205,7 @@ codex plugin add verdict@verdict
 
 ```bash
 git clone https://github.com/Zhao73/verdict && cd verdict && npm install
-npm test          # 56 个测试，全部离线
+npm test          # 66 个测试，全部离线
 npm run shots     # 用真实的渲染代码重新生成 README 截图
 ```
 

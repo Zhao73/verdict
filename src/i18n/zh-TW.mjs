@@ -55,6 +55,10 @@ export default {
     "asking": "問題"
   },
   "ui": {
+    "language": "語言",
+    "langAuto": "自動（跟隨我輸入的語言）",
+    "langSaved": "語言已儲存",
+    "langHint": "↑↓ 選擇 · Enter 儲存 · Esc 返回",
     "tagline": "隨手可用的股票研究台",
     "placeholder": "輸入代號或問題 —— 2330.TW · AAPL 貴嗎？ · /compare NVDA AMD",
     "askPlaceholder": "針對這份報告繼續提問…",
@@ -125,6 +129,73 @@ export default {
     "since": "至今",
     "help": "說明",
     "tipQuestion": "2330.TW 現在貴嗎？"
+  },
+  "methods": {
+    "title": "Verdict 獨家方法",
+    "score": "Verdict 評分",
+    "bands": {
+      "strong": "強",
+      "positive": "偏強",
+      "neutral": "中性",
+      "weak": "偏弱",
+      "poor": "弱"
+    },
+    "parts": {
+      "value": "價值",
+      "evidence": "證據",
+      "fundamentals": "基本面",
+      "tape": "走勢"
+    },
+    "implied": "價格隱含的成長",
+    "implied_line": "現價隱含未來 {n} 年每年成長 {g} · 過去實際 {h}/年",
+    "reads": {
+      "demanding": "預期偏高",
+      "undemanding": "預期偏低",
+      "in_line": "預期合理"
+    },
+    "range": "選擇權隱含波動",
+    "range_line": "{d} 天內 ±{m}（{lo}–{hi}）",
+    "range_reads": {
+      "event_priced": "選擇權定價的波動大於近期實際",
+      "complacent": "選擇權定價的波動小於近期實際",
+      "fair": "選擇權定價與近期波動相當"
+    },
+    "regime": "走勢狀態",
+    "trends": {
+      "up": "上升趨勢",
+      "down": "下降趨勢",
+      "turning": "趨勢轉折"
+    },
+    "vols": {
+      "calm": "平穩",
+      "normal": "波動正常",
+      "stormy": "波動劇烈"
+    },
+    "odds": "{n} 個月內觸及各價位區間的機率",
+    "payoff": "報酬風險",
+    "payoff_line": "期望 {e} · 上行 {u} · 下行 {d} · 報酬/風險 {r}",
+    "payoff_reads": {
+      "favourable": "有利",
+      "balanced": "均衡",
+      "unfavourable": "不利"
+    },
+    "evidence": "證據天平",
+    "evidence_line": "看多 {b} · 看空 {r} · 中性 {x} 項發現，依來源品質加權",
+    "leans": {
+      "bullish": "偏多",
+      "bearish": "偏空",
+      "balanced": "均衡"
+    },
+    "audit": "一致性檢查",
+    "consistent": "評級、估值、報酬風險與證據方向一致",
+    "flags": {
+      "rating_vs_evidence": "評級與證據權重方向相反",
+      "rating_vs_value": "評級與基準估值方向相反",
+      "rating_vs_payoff": "評級與情境加權報酬方向相反",
+      "confidence_vs_gaps": "存在重要資料缺口，卻給出高信心",
+      "desks_split": "各研究台分歧明顯"
+    },
+    "note": "由程式根據資料與結論計算，用來檢驗結論，不會更動結論。"
   },
   "desks": {
     "business": "業務與財報",

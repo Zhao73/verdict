@@ -1,6 +1,6 @@
 {
   "name": "@zhao73/verdict",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A research desk for any stock, in any market and 11 languages — in your terminal, Claude Code and Codex: live data, parallel analysts, a bull-vs-bear debate and a clear verdict with price levels.",
   "type": "module",
   "license": "MIT",
@@ -30,6 +30,8 @@
     "korea",
     "mcp",
     "multilingual",
+    "reverse-dcf",
+    "windows",
     "stocks",
     "terminal",
     "tui"
@@ -55,7 +57,8 @@
     "CHANGELOG.md",
     "LICENSE",
     "README.ja.md",
-    "README.ko.md"
+    "README.ko.md",
+    "docs/"
   ],
   "scripts": {
     "start": "node bin/verdict.mjs",

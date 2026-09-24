@@ -55,6 +55,10 @@ export default {
     "asking": "Frage"
   },
   "ui": {
+    "language": "Sprache",
+    "langAuto": "Automatisch (der Eingabesprache folgen)",
+    "langSaved": "Sprache gespeichert",
+    "langHint": "↑↓ wählen · Enter speichern · Esc zurück",
     "tagline": "ein Research-Desk für jede Aktie",
     "placeholder": "Ticker oder Frage — SAP.DE · ist AAPL teuer? · /compare NVDA AMD",
     "askPlaceholder": "Frage zu diesem Bericht stellen…",
@@ -125,6 +129,73 @@ export default {
     "since": "seitdem",
     "help": "HILFE",
     "tipQuestion": "ist SAP.DE teuer?"
+  },
+  "methods": {
+    "title": "Verdict-Methoden",
+    "score": "Verdict-Score",
+    "bands": {
+      "strong": "stark",
+      "positive": "positiv",
+      "neutral": "neutral",
+      "weak": "schwach",
+      "poor": "schlecht"
+    },
+    "parts": {
+      "value": "Bewertung",
+      "evidence": "Belege",
+      "fundamentals": "Fundamentaldaten",
+      "tape": "Kursverlauf"
+    },
+    "implied": "Eingepreistes Wachstum",
+    "implied_line": "der Kurs preist {g}/Jahr über {n} Jahre ein · erreicht {h}/Jahr",
+    "reads": {
+      "demanding": "Erwartungen hoch",
+      "undemanding": "Erwartungen niedrig",
+      "in_line": "Erwartungen angemessen"
+    },
+    "range": "Optionsimplizierte Bewegung",
+    "range_line": "±{m} in {d} T. ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "Optionen preisen mehr als die jüngsten Schwankungen ein",
+      "complacent": "Optionen preisen weniger als die jüngsten Schwankungen ein",
+      "fair": "Optionen im Einklang mit den jüngsten Schwankungen"
+    },
+    "regime": "Marktphase",
+    "trends": {
+      "up": "Aufwärtstrend",
+      "down": "Abwärtstrend",
+      "turning": "Trendwende"
+    },
+    "vols": {
+      "calm": "ruhig",
+      "normal": "normale Volatilität",
+      "stormy": "stürmisch"
+    },
+    "odds": "Wahrscheinlichkeit, jede Zone binnen {n} Monaten zu erreichen",
+    "payoff": "Chance-Risiko-Profil",
+    "payoff_line": "erwartet {e} · Aufwärts {u} · Abwärts {d} · Chance/Risiko {r}",
+    "payoff_reads": {
+      "favourable": "günstig",
+      "balanced": "ausgeglichen",
+      "unfavourable": "ungünstig"
+    },
+    "evidence": "Belegbilanz",
+    "evidence_line": "{b} positive · {r} negative · {x} neutrale Befunde, nach Quellenqualität gewichtet",
+    "leans": {
+      "bullish": "überwiegend positiv",
+      "bearish": "überwiegend negativ",
+      "balanced": "ausgeglichen"
+    },
+    "audit": "Konsistenzprüfung",
+    "consistent": "Rating, Wert, Chance-Risiko und Belege zeigen in dieselbe Richtung",
+    "flags": {
+      "rating_vs_evidence": "Rating und Gewicht der Belege widersprechen sich",
+      "rating_vs_value": "Rating und Basiswert widersprechen sich",
+      "rating_vs_payoff": "Rating und szenariogewichteter Ertrag widersprechen sich",
+      "confidence_vs_gaps": "hohe Zuversicht trotz wesentlicher Datenlücken",
+      "desks_split": "die Desks sind deutlich uneins"
+    },
+    "note": "Vom Code aus Fakten und Entscheidung berechnet; sie prüfen das Urteil und ändern es nie."
   },
   "desks": {
     "business": "Geschäft und Ergebnisse",

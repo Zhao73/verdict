@@ -4,6 +4,7 @@
 
 import { join } from "node:path";
 import { normalizeLanguage } from "./i18n.mjs";
+import { analyzeRun, snapshotMethods } from "./methods.mjs";
 import { knownIds, normalizeCase, normalizeDecision, normalizeDesk } from "./normalize.mjs";
 import { casePrompt, decisionPrompt, DEEP_DESKS, deskPrompt, FAST_DESKS, followUpPrompt } from "./prompts.mjs";
 import { renderReport } from "../render/markdown.mjs";
@@ -111,6 +112,12 @@ export function finishRun(run, { reason = null, started = Date.parse(run.created
   run.state = !run.decision ? "incomplete" : desksOk && casesOk ? "complete" : "degraded";
   run.reason = reason || (run.state === "complete" ? "" : run.state === "degraded" ? `finished without: ${[...Object.entries(run.desks), ...Object.entries(run.cases || {})].filter(([, v]) => !v).map(([k]) => k).join(", ")}` : "no decision was produced");
   run.rating = run.decision?.rating || null;
+  try {
+    run.analytics = analyzeRun(run);
+  } catch (error) {
+    run.analytics = { error: error.message };
+  }
+  run.score = run.analytics?.score?.total ?? null;
   run.elapsed_ms = Date.now() - started;
   save(run);
   writeText(reportPath(run.run_id), renderReport(run));
@@ -137,6 +144,7 @@ export async function research({ symbol, mode = "deep", language = "en", questio
   try {
     emit({ type: "stage", stage: "snapshot" });
     run.snapshot = snapshot || (await backend.snapshotFor?.(run.symbol)) || (await buildSnapshot(run.symbol));
+    run.snapshot.methods ||= snapshotMethods(run.snapshot);
     run.name = run.snapshot.instrument?.name || null;
     run.market = run.snapshot.market || null;
     save(run);

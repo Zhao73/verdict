@@ -3,6 +3,42 @@
 All notable changes to Verdict. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] — 2026-09-24
+
+### Verdict methods
+- Seven deterministic methods, documented in [docs/METHODS.md](https://github.com/Zhao73/verdict/blob/main/docs/METHODS.md):
+  - **Priced-in growth** (reverse DCF): the 10-year growth the price already assumes, compared
+    with what the business delivered.
+  - **Options-implied move**, and whether options price more movement than recent history.
+  - **Tape**: trend × volatility regime, with a note on what it means for timing.
+  - **Zone odds**: the chance the price reaches each price level within three months.
+  - **Payoff**: scenario-weighted value and reward-to-risk.
+  - **Evidence balance**: each desk finding weighted by source quality.
+  - **Audit**: flags a rating that contradicts the evidence, the value or the payoff.
+- The **Verdict Score** (0-100) combines them to cross-check the rating. It never changes the
+  rating.
+- The snapshot methods are citable (`method:implied_growth` …) and steer the desks and the
+  portfolio manager.
+- The audit results appear in the verdict card, the app, the Markdown and HTML reports and the
+  plugin summary.
+- `verdict methods NVDA` shows the snapshot methods without any model call.
+
+### Language
+- Pick the language once: `verdict lang` (numbered list), `verdict lang ja`, or `/lang` in the
+  app (a picker). The choice is saved and used everywhere; `auto` follows what you type and
+  `--lang` overrides it for one run.
+- `verdict config` saves defaults for the engine and the research depth.
+- On Windows, the system language is detected without `LANG`.
+
+### Windows
+- Claude Code is found as `claude.exe` (native installer, even when it is not on `PATH`) or
+  through the npm `claude.cmd` shim, with no shell involved.
+- Windows Terminal and VS Code get truecolor. `verdict doctor` shows platform tips.
+- A Windows path in `VERDICT_BACKEND_MODULE` loads correctly, and `--json` output stays clean when
+  a run fails.
+- CI runs Windows on Node 20, 22 and 24, plus an end-to-end offline demo on every platform.
+- Releases are published automatically from `CHANGELOG.md` when the version changes.
+
 ## [1.0.0] — 2026-09-24
 
 First release.

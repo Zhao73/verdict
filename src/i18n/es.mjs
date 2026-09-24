@@ -55,6 +55,10 @@ export default {
     "asking": "Pregunta"
   },
   "ui": {
+    "language": "Idioma",
+    "langAuto": "Automático (según el idioma en que escribo)",
+    "langSaved": "Idioma guardado",
+    "langHint": "↑↓ elegir · Intro guardar · Esc volver",
     "tagline": "una mesa de análisis para cualquier acción",
     "placeholder": "Ticker o pregunta — SAN.MC · ¿está cara AAPL? · /compare NVDA AMD",
     "askPlaceholder": "Pregunta sobre este informe…",
@@ -125,6 +129,73 @@ export default {
     "since": "desde",
     "help": "AYUDA",
     "tipQuestion": "¿está cara SAN.MC?"
+  },
+  "methods": {
+    "title": "Métodos Verdict",
+    "score": "Puntuación Verdict",
+    "bands": {
+      "strong": "fuerte",
+      "positive": "positiva",
+      "neutral": "neutral",
+      "weak": "débil",
+      "poor": "pobre"
+    },
+    "parts": {
+      "value": "valor",
+      "evidence": "evidencia",
+      "fundamentals": "fundamentales",
+      "tape": "tendencia"
+    },
+    "implied": "Crecimiento descontado en el precio",
+    "implied_line": "el precio descuenta {g}/año durante {n} años · logrado {h}/año",
+    "reads": {
+      "demanding": "expectativas exigentes",
+      "undemanding": "expectativas modestas",
+      "in_line": "expectativas razonables"
+    },
+    "range": "Movimiento implícito en opciones",
+    "range_line": "±{m} en {d} d ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "las opciones descuentan más que los movimientos recientes",
+      "complacent": "las opciones descuentan menos que los movimientos recientes",
+      "fair": "opciones en línea con los movimientos recientes"
+    },
+    "regime": "Régimen de mercado",
+    "trends": {
+      "up": "tendencia alcista",
+      "down": "tendencia bajista",
+      "turning": "en giro"
+    },
+    "vols": {
+      "calm": "tranquilo",
+      "normal": "volatilidad normal",
+      "stormy": "agitado"
+    },
+    "odds": "Probabilidad de alcanzar cada zona en {n} meses",
+    "payoff": "Perfil de rentabilidad",
+    "payoff_line": "esperado {e} · alza {u} · baja {d} · rentabilidad/riesgo {r}",
+    "payoff_reads": {
+      "favourable": "favorable",
+      "balanced": "equilibrado",
+      "unfavourable": "desfavorable"
+    },
+    "evidence": "Balance de evidencia",
+    "evidence_line": "{b} alcistas · {r} bajistas · {x} neutrales, ponderados por calidad de la fuente",
+    "leans": {
+      "bullish": "inclinada al alza",
+      "bearish": "inclinada a la baja",
+      "balanced": "equilibrada"
+    },
+    "audit": "Control de coherencia",
+    "consistent": "calificación, valor, rentabilidad y evidencia coinciden",
+    "flags": {
+      "rating_vs_evidence": "la calificación y el peso de la evidencia apuntan en direcciones opuestas",
+      "rating_vs_value": "la calificación y el valor base apuntan en direcciones opuestas",
+      "rating_vs_payoff": "la calificación y la rentabilidad ponderada por escenarios apuntan en direcciones opuestas",
+      "confidence_vs_gaps": "confianza alta pese a lagunas de datos importantes",
+      "desks_split": "los equipos discrepan claramente"
+    },
+    "note": "Calculados por el código a partir de los datos y la decisión; comprueban el veredicto, nunca lo cambian."
   },
   "desks": {
     "business": "Negocio y resultados",

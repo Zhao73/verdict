@@ -35,7 +35,8 @@ const ROUTE = {
 
 const COMMON = `You are part of Verdict, an equity research team. Rules:
 - Every number must come from the snapshot or from a source you retrieved now. Never use remembered prices, estimates or dates.
-- Cite with IDs: snapshot IDs (data:quote, data:fundamentals, news:N3, lens:garp, ...) and your own sources S1, S2, ... listed in "sources".
+- Cite with IDs: snapshot IDs (data:quote, data:fundamentals, news:N3, lens:garp, method:implied_growth, ...) and your own sources S1, S2, ... listed in "sources".
+- The Verdict methods in the snapshot are code-computed: method:implied_growth says what growth the price already assumes, method:implied_range what move options price, method:regime the state of the tape. Test the thesis against them; do not recompute them.
 - Missing or unverifiable information goes in "gaps"; say it plainly rather than guessing.
 - Be specific and concise: dates, figures, direction. No filler, no restating the snapshot.`;
 
@@ -102,7 +103,7 @@ export function decisionPrompt({ record, cases, run }) {
     ? `# Debate\n\n## Bull\n${JSON.stringify(cases.bull ?? "FAILED", null, 1)}\n\n## Bear\n${JSON.stringify(cases.bear ?? "FAILED", null, 1)}`
     : "# Debate\n\nNo debate in fast mode: weigh the long and short arguments yourself and set debate_winner to none.";
   return {
-    system: `${COMMON}\n\nYou are the portfolio manager and you decide. Adjudicate on the merits, not by counting desks, lenses or sides; an out_of_scope lens is a data gap, not a vote. Hold is a judgment, never a placeholder for missing evidence — if evidence is thin, say so in confidence. Valuation is per share in the quote currency and must be consistent with the evidence. Price levels are conditions (avoid / start / add), not a target. Carry every material data gap into "gaps". Cite only IDs that appear in the record. Be brief: conclusion ≤ 5 sentences, every other text field ≤ 2 sentences, 3-4 price levels, ≤ 4 catalysts, ≤ 4 risks.${intentLine(run)}`,
+    system: `${COMMON}\n\nYou are the portfolio manager and you decide. Adjudicate on the merits, not by counting desks, lenses or sides; an out_of_scope lens is a data gap, not a vote. Hold is a judgment, never a placeholder for missing evidence — if evidence is thin, say so in confidence. Valuation is per share in the quote currency and must be consistent with the evidence. Price levels are conditions (avoid / start / add), not a target; after you decide, code computes the odds of reaching each zone from volatility, a scenario-weighted payoff from your bear/base/bull values and an audit of rating vs evidence, so keep them mutually consistent and set levels the stock can plausibly reach (method:implied_range). Frame the valuation against what the price already implies (method:implied_growth). Carry every material data gap into "gaps". Cite only IDs that appear in the record. Be brief: conclusion ≤ 5 sentences, every other text field ≤ 2 sentences, 3-4 price levels, ≤ 4 catalysts, ≤ 4 risks.${intentLine(run)}`,
     user: [`Stock: ${run.symbol}${run.name ? ` (${run.name})` : ""}. Today: ${run.as_of}.`, run.question ? `The user asks: ${run.question} — answer it directly in the conclusion.` : "", `# Research record\n\n${recordText(record)}`, debate, languageLine(run.language)].filter(Boolean).join("\n\n"),
   };
 }

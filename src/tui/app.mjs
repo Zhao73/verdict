@@ -6,7 +6,9 @@ import { join } from "node:path";
 import { selectBackend } from "../models/index.mjs";
 import { compare } from "../engine/compare.mjs";
 import * as data from "../engine/data.mjs";
-import { detectLanguage, normalizeLanguage } from "../engine/i18n.mjs";
+import { chosenLanguage, setConfig } from "../engine/config.mjs";
+import { detectLanguage, languageOfText, normalizeLanguage } from "../engine/i18n.mjs";
+import { LANGUAGE_CODES, LOCALES } from "../i18n/index.mjs";
 import { ask, htmlPath, loadRun, research } from "../engine/pipeline.mjs";
 import { listRuns, readJsonl, runDir } from "../engine/store.mjs";
 import { resolveTarget } from "../engine/target.mjs";
@@ -24,7 +26,11 @@ export class App {
   constructor({ cols = process.stdout.columns || 100, rows = process.stdout.rows || 30, language, engine, models = {}, write = (s) => process.stdout.write(s), backendFactory = selectBackend, clock = () => new Date() } = {}) {
     this.cols = cols;
     this.rows = rows;
-    this.language = normalizeLanguage(language || detectLanguage());
+    // A language passed in (--lang) or saved with /lang is used for everything; otherwise each
+    // request follows the language it is typed in.
+    const saved = chosenLanguage();
+    this.languageLocked = Boolean(language || saved);
+    this.language = normalizeLanguage(language || saved || detectLanguage());
     this.engine = engine;
     this.models = models;
     this.write = write;
@@ -183,7 +189,7 @@ export class App {
 
   async startResearch({ symbol, question = "", mode = "deep", compareId = null }) {
     const id = `${symbol}-${Date.now().toString(36)}`;
-    const language = this.language === "en" ? normalizeLanguage(detectLanguage(question, { LANG: "" })) : this.language;
+    const language = this.languageLocked ? this.language : languageOfText(question) || this.language;
     const job = { id, symbol, question, mode, language, tasks: {}, startedAt: Date.now(), cost: 0, controller: new AbortController(), compareId, stage: "snapshot" };
     this.jobs.set(id, job);
     if (!compareId) {
@@ -351,9 +357,9 @@ export class App {
         }).catch((e) => this.notify(e.message, "bear"));
         return undefined;
       case "lang":
-        this.language = normalizeLanguage(args[0] || "en");
-        this.prev = null;
-        return undefined;
+      case "language":
+        if (!args.length) return this.openLanguagePicker();
+        return this.chooseLanguage(args[0]);
       case "help":
         return this.setView({ type: "help" });
       case "home":
@@ -364,6 +370,60 @@ export class App {
       default:
         return this.notify(`? /${cmd}`, "hold");
     }
+  }
+
+  // ------------------------------------------------------------ language
+
+  languageOptions() {
+    return ["auto", ...LANGUAGE_CODES];
+  }
+
+  openLanguagePicker() {
+    const current = this.languageLocked ? this.language : "auto";
+    this.picker = { index: Math.max(0, this.languageOptions().indexOf(current)), back: this.view };
+    this.setView({ type: "language" });
+    this.focus = "main";
+  }
+
+  /** Apply and save a language; "auto" goes back to following what is typed. */
+  chooseLanguage(code) {
+    let saved;
+    try {
+      saved = setConfig("language", code).language;
+    } catch (error) {
+      return this.notify(error.message, "bear");
+    }
+    this.languageLocked = saved !== "auto";
+    this.language = saved === "auto" ? normalizeLanguage(detectLanguage()) : saved;
+    this.prev = null;
+    if (this.view.type === "language") this.setView(this.picker?.back?.type === "language" ? { type: "welcome" } : this.picker?.back || { type: "welcome" });
+    this.focus = "input";
+    return this.notify(`${this.S.langSaved}: ${saved === "auto" ? this.S.langAuto : LOCALES[saved]?.native || saved}`);
+  }
+
+  pickerKey(key) {
+    const options = this.languageOptions();
+    if (key.name === "up") this.picker.index = (this.picker.index + options.length - 1) % options.length;
+    else if (key.name === "down") this.picker.index = (this.picker.index + 1) % options.length;
+    else if (key.name === "enter") return this.chooseLanguage(options[this.picker.index]);
+    else if (key.name === "escape") {
+      this.setView(this.picker.back || { type: "welcome" });
+      this.focus = "input";
+    } else return false;
+    return true;
+  }
+
+  languageLines() {
+    const S = this.S;
+    const current = this.languageLocked ? this.language : "auto";
+    const lines = ["", `  ${V.heading(S.language.toUpperCase())}`, ""];
+    this.languageOptions().forEach((code, i) => {
+      const name = truncate(code === "auto" ? S.langAuto : LOCALES[code].native, 34);
+      const tail = `${tone.dim(code)}${code === current ? tone.accent("  ✓") : ""}`;
+      lines.push(i === this.picker?.index ? `  ${paint(` ▸ ${pad(name, 36)} `, { fg: "onAccent", bg: "accent", bold: true })}${tail}` : `     ${pad(tone.text(name), 36)} ${tail}`);
+    });
+    lines.push("", `  ${tone.faint(S.langHint)}`);
+    return lines;
   }
 
   // ------------------------------------------------------------ keys
@@ -382,6 +442,9 @@ export class App {
       return undefined;
     }
     if (key.name === "click") return this.click(key.x, key.y);
+    if (this.view.type === "language" && this.picker && ["up", "down", "enter", "escape"].includes(key.name) && (this.focus !== "input" || !this.input.value)) {
+      if (this.pickerKey(key) !== false) return undefined;
+    }
     if (key.name === "tab" || key.name === "shift-tab") {
       const order = this.cols >= 80 ? ["input", "side", "main"] : ["input", "main"];
       const i = order.indexOf(this.focus);
@@ -479,9 +542,11 @@ export class App {
     const S = this.S;
     switch (this.view.type) {
       case "welcome":
-        return V.welcomeLines(w, { language: this.language, recent: this.history.filter((r) => r.rating), track: this.track });
+        return V.welcomeLines(w, { language: this.language, recent: this.history.filter((r) => r.rating), track: this.track, languageLabel: this.languageLocked ? LOCALES[this.language]?.native || this.language : `${this.S.langAuto} · ${LOCALES[this.language]?.native || this.language}` });
       case "help":
         return helpLines(this.language);
+      case "language":
+        return this.languageLines();
       case "track":
         return V.trackLines(this.track, w, this.language);
       case "compare": {
@@ -530,6 +595,7 @@ export class App {
     if (v.type === "compare") return this.compares.get(v.id)?.symbols.join(" · ") || "";
     if (v.type === "track") return this.S.track;
     if (v.type === "help") return this.S.help;
+    if (v.type === "language") return this.S.language;
     return this.S.tagline;
   }
 
@@ -686,7 +752,8 @@ function helpLines(language) {
     ["/watch NVDA · /unwatch NVDA", "watchlist"],
     ["/track", "how past verdicts did since"],
     ["/export  or  x", "save the HTML report to the current folder"],
-    ["/lang ko · /home · /quit", "language (en zh-CN zh-TW ja ko fr de es it pt nl) · home · quit"],
+    ["/lang · /lang ko · /lang auto", "pick the language (saved) · auto follows what you type"],
+    ["/home · /quit", "home · quit"],
     ["腾讯 · トヨタ · 삼성전자 · 600519", "any market: company names, local codes or tickers"],
     ["", ""],
     ["Tab / Shift-Tab", "move focus: command bar · sidebar · main"],

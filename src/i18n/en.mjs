@@ -55,6 +55,10 @@ export default {
     "asking": "Question"
   },
   "ui": {
+    "language": "Language",
+    "langAuto": "Automatic (follow the language I type in)",
+    "langSaved": "Language saved",
+    "langHint": "↑↓ choose · Enter save · Esc back",
     "tagline": "a research desk for any stock",
     "placeholder": "Ticker or question — NVDA · is AAPL cheap? · /compare NVDA AMD",
     "askPlaceholder": "Ask about this report…",
@@ -125,6 +129,73 @@ export default {
     "since": "since",
     "help": "HELP",
     "tipQuestion": "is 0700.HK cheap?"
+  },
+  "methods": {
+    "title": "Verdict methods",
+    "score": "Verdict Score",
+    "bands": {
+      "strong": "strong",
+      "positive": "positive",
+      "neutral": "neutral",
+      "weak": "weak",
+      "poor": "poor"
+    },
+    "parts": {
+      "value": "value",
+      "evidence": "evidence",
+      "fundamentals": "fundamentals",
+      "tape": "tape"
+    },
+    "implied": "Priced-in growth",
+    "implied_line": "price implies {g}/yr for {n} yrs · delivered {h}/yr",
+    "reads": {
+      "demanding": "expectations demanding",
+      "undemanding": "expectations undemanding",
+      "in_line": "expectations in line"
+    },
+    "range": "Options-implied move",
+    "range_line": "±{m} by {d}d ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "options price more than recent moves",
+      "complacent": "options price less than recent moves",
+      "fair": "options in line with recent moves"
+    },
+    "regime": "Tape",
+    "trends": {
+      "up": "uptrend",
+      "down": "downtrend",
+      "turning": "turning"
+    },
+    "vols": {
+      "calm": "calm",
+      "normal": "normal volatility",
+      "stormy": "stormy"
+    },
+    "odds": "Odds of reaching each zone within {n} months",
+    "payoff": "Payoff",
+    "payoff_line": "expected {e} · upside {u} · downside {d} · reward/risk {r}",
+    "payoff_reads": {
+      "favourable": "favourable",
+      "balanced": "balanced",
+      "unfavourable": "unfavourable"
+    },
+    "evidence": "Evidence balance",
+    "evidence_line": "{b} bullish · {r} bearish · {x} neutral findings, weighted by source quality",
+    "leans": {
+      "bullish": "leans bullish",
+      "bearish": "leans bearish",
+      "balanced": "balanced"
+    },
+    "audit": "Audit",
+    "consistent": "rating, value, payoff and evidence agree",
+    "flags": {
+      "rating_vs_evidence": "the rating and the weight of evidence point different ways",
+      "rating_vs_value": "the rating and the base value point different ways",
+      "rating_vs_payoff": "the rating and the scenario-weighted payoff point different ways",
+      "confidence_vs_gaps": "high confidence despite material data gaps",
+      "desks_split": "the desks disagree sharply"
+    },
+    "note": "Computed by code from the facts and the decision. They check the verdict; they never change it."
   },
   "desks": {
     "business": "Business & earnings",

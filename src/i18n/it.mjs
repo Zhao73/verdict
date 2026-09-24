@@ -55,6 +55,10 @@ export default {
     "asking": "Domanda"
   },
   "ui": {
+    "language": "Lingua",
+    "langAuto": "Automatica (segue la lingua in cui scrivo)",
+    "langSaved": "Lingua salvata",
+    "langHint": "↑↓ scegli · Invio salva · Esc indietro",
     "tagline": "un desk di ricerca per qualsiasi azione",
     "placeholder": "Ticker o domanda — ENI.MI · AAPL è cara? · /compare NVDA AMD",
     "askPlaceholder": "Chiedi qualcosa su questo report…",
@@ -125,6 +129,73 @@ export default {
     "since": "da allora",
     "help": "AIUTO",
     "tipQuestion": "ENI.MI è cara?"
+  },
+  "methods": {
+    "title": "Metodi Verdict",
+    "score": "Punteggio Verdict",
+    "bands": {
+      "strong": "forte",
+      "positive": "positivo",
+      "neutral": "neutrale",
+      "weak": "debole",
+      "poor": "scarso"
+    },
+    "parts": {
+      "value": "valore",
+      "evidence": "evidenze",
+      "fundamentals": "fondamentali",
+      "tape": "andamento"
+    },
+    "implied": "Crescita scontata nel prezzo",
+    "implied_line": "il prezzo sconta {g}/anno per {n} anni · realizzata {h}/anno",
+    "reads": {
+      "demanding": "aspettative elevate",
+      "undemanding": "aspettative contenute",
+      "in_line": "aspettative in linea"
+    },
+    "range": "Movimento implicito nelle opzioni",
+    "range_line": "±{m} in {d} gg ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "le opzioni scontano più dei movimenti recenti",
+      "complacent": "le opzioni scontano meno dei movimenti recenti",
+      "fair": "opzioni in linea con i movimenti recenti"
+    },
+    "regime": "Fase di mercato",
+    "trends": {
+      "up": "trend rialzista",
+      "down": "trend ribassista",
+      "turning": "in inversione"
+    },
+    "vols": {
+      "calm": "calmo",
+      "normal": "volatilità normale",
+      "stormy": "turbolento"
+    },
+    "odds": "Probabilità di raggiungere ogni zona entro {n} mesi",
+    "payoff": "Profilo di rendimento",
+    "payoff_line": "atteso {e} · rialzo {u} · ribasso {d} · rendimento/rischio {r}",
+    "payoff_reads": {
+      "favourable": "favorevole",
+      "balanced": "equilibrato",
+      "unfavourable": "sfavorevole"
+    },
+    "evidence": "Bilancio delle evidenze",
+    "evidence_line": "{b} rialziste · {r} ribassiste · {x} neutrali, pesate per qualità della fonte",
+    "leans": {
+      "bullish": "pende al rialzo",
+      "bearish": "pende al ribasso",
+      "balanced": "equilibrato"
+    },
+    "audit": "Verifica di coerenza",
+    "consistent": "giudizio, valore, rendimento ed evidenze concordano",
+    "flags": {
+      "rating_vs_evidence": "il giudizio e il peso delle evidenze vanno in direzioni opposte",
+      "rating_vs_value": "il giudizio e il valore base vanno in direzioni opposte",
+      "rating_vs_payoff": "il giudizio e il rendimento ponderato per scenari vanno in direzioni opposte",
+      "confidence_vs_gaps": "fiducia alta nonostante lacune di dati rilevanti",
+      "desks_split": "i desk sono nettamente divisi"
+    },
+    "note": "Calcolati dal codice su dati e decisione; verificano il verdetto, non lo modificano mai."
   },
   "desks": {
     "business": "Attività e risultati",

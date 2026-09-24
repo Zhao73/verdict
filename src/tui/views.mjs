@@ -6,6 +6,7 @@ import { deskTitle, ratingLabel, stanceLabel, t } from "../engine/i18n.mjs";
 import { DESKS } from "../engine/prompts.mjs";
 import { reportPath } from "../engine/pipeline.mjs";
 import { upside } from "../render/markdown.mjs";
+import { gauge, methodView } from "../render/methods.mjs";
 import { parseRange } from "../render/html.mjs";
 import { zoneFor } from "../engine/watch.mjs";
 import { pad, renderMarkdown, truncate, width, wrapText } from "../render/terminal.mjs";
@@ -40,7 +41,7 @@ export function wordmark() {
   return MARK.map((row) => row.map((g, i) => paint(g, { fg: shades[i], bold: true })).join(" "));
 }
 
-export function welcomeLines(w, { language, recent = [], track = null }) {
+export function welcomeLines(w, { language, recent = [], track = null, languageLabel = null }) {
   const S = strings(language);
   const out = ["", ...wordmark().map((l) => `  ${l}`), `  ${tone.dim(S.tagline)}`, "", `  ${heading(S.quick)}`];
   const cmds = ["NVDA", S.tipQuestion, "/fast AAPL", "/compare NVDA AMD AVGO", "/watch NVDA · /track"];
@@ -50,6 +51,7 @@ export function welcomeLines(w, { language, recent = [], track = null }) {
     out.push("", `  ${heading(S.recent)}`);
     for (const r of recent.slice(0, 6)) out.push(`   ${pad(tone.strong(r.symbol), 10)} ${pad(r.rating ? paint(ratingLabel(r.rating, language), ratingTone(r.rating)) : tone.dim(r.state), 16)} ${tone.dim(`${r.created_at.slice(0, 10)} · ${truncate(r.name || "", Math.max(8, w - 40))}`)}`);
   }
+  if (languageLabel) out.push("", `  ${tone.dim(`${S.language}:`)} ${tone.strong(languageLabel)} ${tone.faint("· /lang")}`);
   if (track?.count) out.push("", `  ${heading(S.track)}`, `   ${S.hitRate} ${tone.strong(`${track.hit_rate}%`)} ${tone.dim(`(${track.count})`)}${track.avg_return_bullish === null ? "" : `  ·  Buy/OW ${S.since} ${colored(track.avg_return_bullish, signed(track.avg_return_bullish))}`}`);
   return out;
 }
@@ -178,6 +180,8 @@ export function verdictLines(run, w) {
   }
   const up = upside(run);
   out.push(`${head}`, "", ` ${chip(d.rating, ratingLabel(d.rating, run.language))}  ${tone.dim(`${S.confidence}`)} ${tone.strong(L.levels[d.confidence] || d.confidence)}${up === null ? "" : `   ${tone.dim(L.basev)} ${colored(up, signed(up, 0))}`}${q ? `   ${tone.dim(`${q.price} ${q.currency}`)}` : ""}`);
+  const mv = methodView(run);
+  if (mv.score) out.push("", ` ${tone.dim(mv.scoreLabel)} ${paint(`${mv.score.total}`, { fg: mv.score.tone, bold: true })}${tone.faint("/100")} ${paint(gauge(mv.score.total), mv.score.tone)} ${paint(mv.score.band, mv.score.tone)}`);
   out.push("", ...para(d.conclusion, w - 2, 1, tone.ink));
   out.push("", heading(`${S.value} · ${d.valuation.currency}`), ...valueBar(d, q?.price, Math.min(w, 90)), ...para(d.valuation.method, w - 2, 1, tone.dim));
   const zone = zoneFor(d.price_levels, q?.price);
@@ -188,7 +192,15 @@ export function verdictLines(run, w) {
     const act = String(l.action);
     const st = /avoid|trim|sell|回避|减|卖/.test(act) ? "bear" : /add|buy|加|买/.test(act) ? "bull" : "hold";
     const here = zone === l ? tone.accent(`  ◀ ${S.youAreHere}`) : "";
-    out.push(` ${paint("▌", st)} ${pad(tone.strong(truncate(l.range, rangeW)), rangeW)}  ${pad(paint(truncate(act, actW), st), actW)}  ${tone.dim(truncate(l.why, Math.max(10, w - rangeW - actW - 10)))}${here}`);
+    const odds = mv.odds.size ? `${pad(zone === l ? tone.accent("●") : mv.odds.has(l.range) ? tone.info(`${mv.odds.get(l.range)}%`) : tone.faint("—"), 5)} ` : "";
+    out.push(` ${paint("▌", st)} ${pad(tone.strong(truncate(l.range, rangeW)), rangeW)}  ${pad(paint(truncate(act, actW), st), actW)}  ${odds}${tone.dim(truncate(l.why, Math.max(10, w - rangeW - actW - 16)))}${here}`);
+  }
+  if (mv.oddsLabel) out.push(tone.faint(`   % ${mv.oddsLabel}`));
+  if (mv.rows.length || mv.score) {
+    out.push("", heading(mv.title.toUpperCase()));
+    if (mv.score) out.push(` ${tone.dim(mv.score.parts.map((p) => `${p.label} ${p.value}`).join(" · "))}`);
+    const labelW = Math.min(26, Math.max(...mv.rows.map((r) => width(r.label))) + 2);
+    for (const r of mv.rows) out.push(...para(r.text, w - labelW - 4, 0).map((l, i) => ` ${i ? " " : paint("▸", r.tone)} ${i ? " ".repeat(labelW) : pad(tone.dim(r.label), labelW)}${r.tone === "dim" ? tone.text(l) : paint(l, r.flagged ? "bear" : "text")}`));
   }
   const bull = run.cases?.bull?.thesis || d.bull_case;
   const bear = run.cases?.bear?.thesis || d.bear_case;

@@ -3,9 +3,10 @@
 
 import * as data from "./data.mjs";
 import { evaluateLenses, LENS_IDS } from "./lenses.mjs";
+import { methodBrief, snapshotMethods } from "./methods.mjs";
 import { marketOf, newsEdition } from "./markets.mjs";
 import { namesFor } from "./names.mjs";
-import { detectLanguage } from "../i18n/index.mjs";
+import { languageOfText } from "../i18n/index.mjs";
 
 async function settle(label, fn, gaps) {
   try {
@@ -34,7 +35,7 @@ export async function buildSnapshot(query, { news = true, options = true } = {})
   // Non-US names: also search the local-language edition with the name people use there.
   const nonLatin = namesFor(symbol).filter((n) => !/^[\x00-\x7f]+$/.test(n));
   const wantsTraditional = market.code === "HK" || market.code === "TW";
-  const local = nonLatin.find((n) => (detectLanguage(n, {}) === "zh-TW") === wantsTraditional) || nonLatin[0] || short;
+  const local = nonLatin.find((n) => (languageOfText(n) === "zh-TW") === wantsTraditional) || nonLatin[0] || short;
   const localQuery = market.code !== "US" && local ? `"${local}"${short && local !== short ? ` OR "${short}"` : ""}` : null;
   const [fundamentals, filings, opt, headlines] = await Promise.all([
     settle("fundamentals", () => data.getFundamentals(symbol, { instrument: inst, price: quote?.price, currency: quote?.currency || "USD" }), gaps),
@@ -62,6 +63,7 @@ export async function buildSnapshot(query, { news = true, options = true } = {})
   };
   snap.sources = snapshotSources(snap, { history, headlines });
   snap.lenses = evaluateLenses(snap, LENS_IDS);
+  snap.methods = snapshotMethods(snap);
   snap.elapsed_ms = Date.now() - started;
   return snap;
 }
@@ -124,6 +126,10 @@ export function snapshotBrief(s) {
   }
   L.push("Method lenses (deterministic screens on the facts above; out_of_scope = not enough data, not a vote):");
   for (const l of s.lenses) L.push(`  [lens:${l.id}] ${l.name.en || l.name}: ${l.stance}${l.score !== null ? ` (${l.score})` : ""} — ${l.checks.map((c) => `${c.label} ${c.display}${c.pass === null ? "" : c.pass ? "✓" : "✗"}`).join("; ") || l.rationale}`);
+  if (s.methods) {
+    L.push("Verdict methods (deterministic, computed by code from the facts above):");
+    for (const line of methodBrief(s.methods)) L.push(`  ${line}`);
+  }
   if (s.gaps.length) L.push(`Data gaps: ${s.gaps.join("; ")}`);
   return L.join("\n");
 }

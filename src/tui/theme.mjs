@@ -3,7 +3,10 @@
 
 const env = process.env;
 const plainOutput = env.NO_COLOR || env.TERM === "dumb" || (!process.stdout.isTTY && !env.FORCE_COLOR);
-export const colorMode = plainOutput ? "none" : /truecolor|24bit/i.test(env.COLORTERM || "") || env.VERDICT_TRUECOLOR ? "truecolor" : "256";
+// Windows Terminal, VS Code and most modern terminals render 24-bit color; the classic Windows
+// console gets the 256-color palette, which it maps well enough.
+const truecolor = /truecolor|24bit/i.test(env.COLORTERM || "") || env.WT_SESSION || env.TERM_PROGRAM === "vscode" || /^(iTerm\.app|WezTerm|ghostty)$/.test(env.TERM_PROGRAM || "") || env.VERDICT_TRUECOLOR;
+export const colorMode = plainOutput ? "none" : truecolor ? "truecolor" : "256";
 
 const PALETTE = {
   accent: ["#f5a524", 214],

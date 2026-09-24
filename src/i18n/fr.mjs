@@ -55,6 +55,10 @@ export default {
     "asking": "Question"
   },
   "ui": {
+    "language": "Langue",
+    "langAuto": "Automatique (suivre la langue de saisie)",
+    "langSaved": "Langue enregistrée",
+    "langHint": "↑↓ choisir · Entrée enregistrer · Échap retour",
     "tagline": "un bureau d'analyse pour n'importe quelle action",
     "placeholder": "Symbole ou question — MC.PA · AAPL est-elle chère ? · /compare NVDA AMD",
     "askPlaceholder": "Posez une question sur ce rapport…",
@@ -125,6 +129,73 @@ export default {
     "since": "depuis",
     "help": "AIDE",
     "tipQuestion": "MC.PA est-elle chère ?"
+  },
+  "methods": {
+    "title": "Méthodes Verdict",
+    "score": "Score Verdict",
+    "bands": {
+      "strong": "fort",
+      "positive": "positif",
+      "neutral": "neutre",
+      "weak": "faible",
+      "poor": "médiocre"
+    },
+    "parts": {
+      "value": "valeur",
+      "evidence": "preuves",
+      "fundamentals": "fondamentaux",
+      "tape": "tendance"
+    },
+    "implied": "Croissance intégrée au cours",
+    "implied_line": "le cours intègre {g}/an sur {n} ans · réalisé {h}/an",
+    "reads": {
+      "demanding": "attentes exigeantes",
+      "undemanding": "attentes modestes",
+      "in_line": "attentes cohérentes"
+    },
+    "range": "Mouvement implicite des options",
+    "range_line": "±{m} sous {d} j ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "les options anticipent plus que les mouvements récents",
+      "complacent": "les options anticipent moins que les mouvements récents",
+      "fair": "options en ligne avec les mouvements récents"
+    },
+    "regime": "Régime de marché",
+    "trends": {
+      "up": "tendance haussière",
+      "down": "tendance baissière",
+      "turning": "retournement"
+    },
+    "vols": {
+      "calm": "calme",
+      "normal": "volatilité normale",
+      "stormy": "agité"
+    },
+    "odds": "Probabilité d'atteindre chaque zone sous {n} mois",
+    "payoff": "Profil de gain",
+    "payoff_line": "espérance {e} · hausse {u} · baisse {d} · gain/risque {r}",
+    "payoff_reads": {
+      "favourable": "favorable",
+      "balanced": "équilibré",
+      "unfavourable": "défavorable"
+    },
+    "evidence": "Balance des preuves",
+    "evidence_line": "{b} haussiers · {r} baissiers · {x} neutres, pondérés par la qualité des sources",
+    "leans": {
+      "bullish": "penche haussier",
+      "bearish": "penche baissier",
+      "balanced": "équilibrée"
+    },
+    "audit": "Contrôle de cohérence",
+    "consistent": "note, valeur, gain et preuves vont dans le même sens",
+    "flags": {
+      "rating_vs_evidence": "la note et le poids des preuves divergent",
+      "rating_vs_value": "la note et la valeur centrale divergent",
+      "rating_vs_payoff": "la note et le gain pondéré par scénario divergent",
+      "confidence_vs_gaps": "confiance élevée malgré des lacunes de données importantes",
+      "desks_split": "les desks sont nettement divisés"
+    },
+    "note": "Calculés par le code à partir des faits et de la décision ; ils vérifient le verdict sans jamais le modifier."
   },
   "desks": {
     "business": "Activité et résultats",

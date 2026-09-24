@@ -5,7 +5,7 @@ import { join } from "node:path";
 import * as data from "./data.mjs";
 import { loadRun } from "./pipeline.mjs";
 import { homeDir, listRuns, readJson, writeJson } from "./store.mjs";
-import { parseRange } from "../render/html.mjs";
+import { parseRange } from "./ranges.mjs";
 
 const file = () => join(homeDir(), "watchlist.json");
 

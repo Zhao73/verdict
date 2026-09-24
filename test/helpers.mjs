@@ -21,7 +21,7 @@ export async function fakeSnapshot(symbol = "TEST") {
     technicals: { available: true, return_1m_pct: 3, return_3m_pct: 8, return_12m_pct: 25, momentum_12_1_pct: 20, pct_vs_sma50: 2, pct_vs_sma200: 10, sma50: 98, sma200: 91, rsi14: 58, realized_vol_30d_pct: 24, pct_from_52w_high: -8, max_drawdown_1y_pct: -18, volume_20d_vs_3m: 1.1 },
     fundamentals: {
       metrics: { revenue: { value: 5e10, as_of: "2026-06-30" }, net_income: { value: 1e10 }, free_cash_flow: { value: 1.2e10 }, eps_diluted: { value: 5 } },
-      ratios: { gross_margin_pct: 55, operating_margin_pct: 28, net_margin_pct: 20, roe_pct: 30, fcf_conversion: 1.2, debt_to_equity: 0.4, pe_ttm: 20, pb: 6, ps_ttm: 4, peg: 1.2, eps_growth_pct: 16, revenue_growth_pct: 12, revenue_cagr_3y_pct: 11, fcf_yield_pct: 6, shareholder_yield_pct: 4, share_count_change_pct: -2, debt_to_ocf: 1, interest_coverage: 20, current_ratio: 1.6, net_cash: 5e9 },
+      ratios: { gross_margin_pct: 55, operating_margin_pct: 28, net_margin_pct: 20, roe_pct: 30, fcf_conversion: 1.2, debt_to_equity: 0.4, pe_ttm: 20, pb: 6, ps_ttm: 4, peg: 1.2, eps_growth_pct: 16, revenue_growth_pct: 12, revenue_cagr_3y_pct: 11, fcf_yield_pct: 6, shareholder_yield_pct: 4, share_count_change_pct: -2, debt_to_ocf: 1, interest_coverage: 20, current_ratio: 1.6, net_cash: 5e9, market_cap: 2e11 },
       annual: { revenue: [{ fiscal_year_end: "2025-12-31", value: 4.6e10 }] },
       source: { title: "SEC companyfacts", url: "https://example.com/f" },
     },

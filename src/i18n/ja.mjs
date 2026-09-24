@@ -55,6 +55,10 @@ export default {
     "asking": "質問"
   },
   "ui": {
+    "language": "言語",
+    "langAuto": "自動（入力した言語に合わせる）",
+    "langSaved": "言語を保存しました",
+    "langHint": "↑↓ 選択 · Enter 保存 · Esc 戻る",
     "tagline": "あらゆる銘柄のリサーチデスク",
     "placeholder": "ティッカーまたは質問 — NVDA · 7203.T は割安？ · /compare NVDA AMD",
     "askPlaceholder": "このレポートについて質問…",
@@ -125,6 +129,73 @@ export default {
     "since": "以降",
     "help": "ヘルプ",
     "tipQuestion": "7203.T は割安？"
+  },
+  "methods": {
+    "title": "Verdict 独自メソッド",
+    "score": "Verdict スコア",
+    "bands": {
+      "strong": "強い",
+      "positive": "やや強い",
+      "neutral": "中立",
+      "weak": "やや弱い",
+      "poor": "弱い"
+    },
+    "parts": {
+      "value": "価値",
+      "evidence": "根拠",
+      "fundamentals": "ファンダメンタルズ",
+      "tape": "値動き"
+    },
+    "implied": "株価に織り込まれた成長",
+    "implied_line": "株価は今後{n}年間 年{g}の成長を織り込み · 実績は年{h}",
+    "reads": {
+      "demanding": "期待は高すぎ",
+      "undemanding": "期待は控えめ",
+      "in_line": "期待は妥当"
+    },
+    "range": "オプションの予想変動",
+    "range_line": "{d}日で ±{m}（{lo}–{hi}）",
+    "range_reads": {
+      "event_priced": "オプションは直近の実績より大きな変動を織り込み",
+      "complacent": "オプションは直近の実績より小さな変動を織り込み",
+      "fair": "オプションは直近の変動と同程度"
+    },
+    "regime": "相場状態",
+    "trends": {
+      "up": "上昇トレンド",
+      "down": "下降トレンド",
+      "turning": "転換中"
+    },
+    "vols": {
+      "calm": "落ち着き",
+      "normal": "通常の変動",
+      "stormy": "荒れ模様"
+    },
+    "odds": "{n}か月以内に各価格帯に届く確率",
+    "payoff": "ペイオフ",
+    "payoff_line": "期待 {e} · 上値 {u} · 下値 {d} · リワード/リスク {r}",
+    "payoff_reads": {
+      "favourable": "有利",
+      "balanced": "均衡",
+      "unfavourable": "不利"
+    },
+    "evidence": "根拠のバランス",
+    "evidence_line": "強気 {b} · 弱気 {r} · 中立 {x} 件（情報源の質で加重）",
+    "leans": {
+      "bullish": "強気寄り",
+      "bearish": "弱気寄り",
+      "balanced": "均衡"
+    },
+    "audit": "整合性チェック",
+    "consistent": "レーティング・価値・ペイオフ・根拠の向きが一致",
+    "flags": {
+      "rating_vs_evidence": "レーティングと根拠の重みが逆方向",
+      "rating_vs_value": "レーティングと基準価値が逆方向",
+      "rating_vs_payoff": "レーティングとシナリオ加重ペイオフが逆方向",
+      "confidence_vs_gaps": "重要なデータ欠落があるのに確信度が高い",
+      "desks_split": "リサーチデスク間の見解が大きく分かれている"
+    },
+    "note": "データと結論からコードで算出。結論を検証するためのもので、結論は変更しません。"
   },
   "desks": {
     "business": "事業・決算",

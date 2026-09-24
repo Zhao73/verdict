@@ -22,6 +22,7 @@ function normDate(raw, asOf) {
 export function knownIds(snapshot, desks = {}) {
   const ids = new Set(Object.keys(snapshot.sources || {}));
   for (const l of snapshot.lenses || []) ids.add(`lens:${l.id}`);
+  for (const [id, m] of Object.entries(snapshot.methods || {})) if (m?.available) ids.add(`method:${id}`);
   for (const [desk, p] of Object.entries(desks)) for (const s of p?.sources || []) ids.add(`${desk}:${s.id}`);
   return ids;
 }

@@ -44,8 +44,10 @@ LVMH → MC.PA, BHP → BHP.AX for an Australian user). Language: the language t
      (`Verdict run <run_id>, task bull.` / `… task bear.`) and wait for both.
    - Codex: write `bull` then `bear` yourself from `verdict_task`, no browsing.
 4. **Decision** — yourself: `verdict_task(run_id, "decision")` → decide → `verdict_submit`.
-5. `verdict_finish(run_id)`: show its `summary`, then the `report` and `html` paths. Offer
-   follow-up questions.
+5. `verdict_finish(run_id)`: show its `summary` as given — it carries the Verdict Score, the
+   code-computed Verdict methods (priced-in growth, options-implied move, tape, payoff, evidence
+   balance, audit) and the odds of reaching each price zone. If the audit flags a tension (⚠),
+   say so plainly. Then give the `report` and `html` paths and offer follow-up questions.
 
 A task that fails twice: skip it; `verdict_finish` records it and the report says so. Never fill
 a missing result from memory.

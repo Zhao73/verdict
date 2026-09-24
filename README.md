@@ -12,8 +12,10 @@
 <p align="center">
   <a href="#install">Install</a> ·
   <a href="#try-it-in-10-seconds">Demo</a> ·
+  <a href="#verdict-methods">Methods</a> ·
   <a href="#the-app">The app</a> ·
   <a href="#claude-code--codex">Claude Code &amp; Codex</a> ·
+  <a href="#windows">Windows</a> ·
   <a href="README.zh-CN.md">简体中文</a> ·
   <a href="README.ja.md">日本語</a> ·
   <a href="README.ko.md">한국어</a>
@@ -29,8 +31,9 @@ Ask about a stock the way you would ask a colleague — `verdict NVDA`, `verdict
 `verdict AMD 财报前值得拿着吗` — and about three minutes later you have:
 
 - **A verdict:** Buy · Overweight · Hold · Underweight · Sell, with confidence and a direct answer to your question.
+- **A Verdict Score (0-100):** value, evidence, fundamentals and tape in one number that code computes to cross-check the rating.
 - **A value range:** bear / base / bull per share, how it was derived, and how far the price is from base.
-- **Price levels:** where to avoid, where to start, where to add — and which zone the price is in now.
+- **Price levels with odds:** where to avoid, where to start, where to add, which zone the price is in now, and how likely it is to reach each one in three months.
 - **Both sides argued:** the strongest bull case and bear case, and who won.
 - **What to watch:** dated catalysts, ranked risks, a position plan and what would prove it wrong.
 - **Receipts:** every finding is tied to a source you can open; missing data is listed, never guessed.
@@ -55,10 +58,36 @@ Ask about a stock the way you would ask a colleague — `verdict NVDA`, `verdict
 
 `--fast` runs one research pass and the decision (about a minute).
 
+## Verdict methods
+
+The models research, argue and decide. **Code does the arithmetic.** Seven deterministic methods
+frame the thesis before any model writes, then audit the verdict after it:
+
+| | | |
+|---|---|---|
+| **Priced-in growth** | reverse DCF: the 10-year growth today's price already assumes, vs what the business delivered | before |
+| **Options-implied move** | the ± move the options market prices, and whether it prices more than recent history | before |
+| **Tape** | trend × volatility regime, with what it means for timing | before |
+| **Zone odds** | the chance the price trades into each price level within three months | after |
+| **Payoff** | scenario-weighted value, upside vs downside, reward-to-risk | after |
+| **Evidence balance** | every desk finding weighted by source quality (filings > press > headlines) | after |
+| **Audit** | flags a rating that contradicts the evidence, the value or the payoff | after |
+
+They roll up into the **Verdict Score**. It never overrides the rating; a tension shows up as ⚠ in
+the audit. The formulas, thresholds and limits are in [docs/METHODS.md](docs/METHODS.md).
+`verdict methods NVDA` shows the first three without any model call.
+
+<p align="center"><img src="assets/methods.svg" alt="Verdict Score, price levels with odds and the Verdict methods" width="100%"></p>
+
 ## Languages & markets
 
-Ask in your language, about any market. Verdict answers in the language you type in (or `--lang`),
-and the interface, report and HTML page follow it.
+Ask in your language, about any market. Verdict answers in the language you type in, and the
+interface, report and HTML page follow it. To fix one language instead, pick it once:
+`verdict lang` (a numbered list) or `verdict lang ja` in the terminal, `/lang` in the app. The
+choice is saved and used everywhere until you set `verdict lang auto`. `--lang` overrides it for
+one run.
+
+<p align="center"><img src="assets/language.svg" alt="The /lang language picker" width="80%"></p>
 
 | Languages | English · 简体中文 · 繁體中文 · 日本語 · 한국어 · Français · Deutsch · Español · Italiano · Português · Nederlands — other codes work too; models write in them and labels fall back to English |
 |---|---|
@@ -97,7 +126,23 @@ Verdict needs Node 20+ and one engine:
 | **api** | `ANTHROPIC_API_KEY` is set | Fastest. Official Anthropic SDK with streaming and server-side web search. |
 | **claude** | Claude Code is installed and signed in | Uses your Claude Code plan; each step is a headless `claude -p` call. |
 
-It picks one automatically; `--engine api|claude` overrides.
+It picks one automatically; `--engine api|claude` overrides, and `verdict config engine claude`
+saves a default.
+
+### Windows
+
+Verdict runs natively on Windows 10 and 11. No WSL is needed.
+
+```powershell
+winget install OpenJS.NodeJS.LTS            # Node 20+
+npm install -g github:Zhao73/verdict
+verdict doctor
+```
+
+Use **Windows Terminal** for the full-screen app: it renders truecolor, CJK text and the mouse
+wheel. The classic console works too, with 256 colors. Claude Code is found whether it came from
+the native installer (`claude.exe`) or npm (`claude.cmd`). Point `VERDICT_CLAUDE_BIN` at it if it
+lives somewhere unusual. Data lives in `%USERPROFILE%\.verdict`.
 
 ## Try it in 10 seconds
 
@@ -135,7 +180,8 @@ verdict watch add NVDA AAPL           # watchlist with alerts: price entered a z
 verdict track                         # how past verdicts did since
 verdict ask NVDA "what if rates rise?"
 verdict history · verdict show NVDA · verdict export NVDA
-verdict quote|snapshot|news|filings|options|lenses NVDA · verdict macro     # data only, no model calls
+verdict quote|snapshot|news|filings|options|lenses|methods NVDA · verdict macro   # data only, no model calls
+verdict lang ja · verdict config mode fast     # saved settings
 ```
 
 After a verdict you can keep asking questions right there. A verdict from the last six hours is
@@ -187,19 +233,21 @@ the gap. Set `VERDICT_SEC_CONTACT=you@example.com` — the SEC asks for a contac
 | | |
 |---|---|
 | `--model`, `--research-model`, `--debate-model`, `--decision-model` | defaults: api `claude-sonnet-5` / `claude-opus-5`; claude `sonnet` / `opus` |
-| `--lang` | report language; default is the language you type in |
+| `verdict lang <code>` · `/lang` | saved language (`auto` = the language you type in); `--lang` for one run |
+| `verdict config engine\|mode <value>` | saved defaults (`verdict config` shows them, `verdict config reset`) |
 | `VERDICT_HOME` | where runs, cache and the watchlist live (default `~/.verdict`) |
+| `VERDICT_CLAUDE_BIN` | path to Claude Code if it is not on `PATH` |
 | `NO_COLOR` | plain output |
 
 ## Development
 
 ```bash
 git clone https://github.com/Zhao73/verdict && cd verdict && npm install
-npm test          # 56 tests, offline: fixtures, a scripted engine and a fake `claude`
+npm test          # 66 tests, offline: fixtures, a scripted engine and a fake `claude`
 npm run shots     # regenerate the README images from the real renderers
 ```
 
-`src/engine` research engine (markets, names, data, pipeline) · `src/i18n` eleven locales · `src/models` api and claude engines · `src/tui` full-screen app ·
+`src/engine` research engine (markets, names, data, methods, pipeline) · `src/i18n` eleven locales · `src/models` api and claude engines · `src/tui` full-screen app ·
 `src/cli` commands and stream mode · `src/render` Markdown / HTML / terminal · `src/mcp` plugin
 server. The engine, MCP server and renderers have no dependencies, so the plugins run straight from
 a checkout. See [CHANGELOG.md](CHANGELOG.md).

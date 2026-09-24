@@ -71,15 +71,17 @@ const WORDS = {
 };
 
 function fromLocale(env) {
-  const loc = `${env.LC_ALL || ""} ${env.LC_MESSAGES || ""} ${env.LANG || ""}`.trim();
+  let loc = `${env.LC_ALL || ""} ${env.LC_MESSAGES || ""} ${env.LANG || ""}`.trim();
+  // Windows has no LANG; the system locale comes from ICU instead.
+  if (!loc && env === process.env) loc = Intl.DateTimeFormat().resolvedOptions().locale || "";
   const m = loc.match(/\b([a-z]{2})(?:[_-]([A-Z]{2}))?/);
   if (!m) return "en";
-  if (m[1] === "zh") return /TW|HK|MO/.test(m[2] || "") ? "zh-TW" : "zh-CN";
+  if (m[1] === "zh") return /TW|HK|MO/.test(m[2] || "") || /Hant/.test(loc) ? "zh-TW" : "zh-CN";
   return LOCALES[m[1]] ? m[1] : "en";
 }
 
-/** Guess the language from the user's own words, then from the system locale. */
-export function detectLanguage(text = "", env = process.env) {
+/** The language someone's own words are in, or null when the text gives no clear signal. */
+export function languageOfText(text = "") {
   const s = String(text || "");
   if (/[가-힣ᄀ-ᇿ㄰-㆏]/.test(s)) return "ko";
   if (/[぀-ヿ]/.test(s)) return "ja";
@@ -95,7 +97,16 @@ export function detectLanguage(text = "", env = process.env) {
       bestScore = score;
     }
   }
-  if (best && best !== "en" && bestScore >= 2) return best;
-  if (best === "en" && bestScore >= 2) return "en";
-  return fromLocale(env);
+  return best && bestScore >= 2 ? best : null;
 }
+
+/** Guess the language from the user's own words, then from the system locale. */
+export function detectLanguage(text = "", env = process.env) {
+  return languageOfText(text) || fromLocale(env);
+}
+
+/** Labels for the Verdict methods, English for any key a locale lacks. */
+export const methodsText = (language) => ({ ...en.methods, ...(locale(language).methods || {}) });
+
+/** "±{m} by {d}d" + {m: "7%", d: 23} → "±7% by 23d". */
+export const fill = (template, vars) => String(template).replace(/\{(\w+)\}/g, (_, k) => (vars[k] === undefined || vars[k] === null ? "—" : String(vars[k])));

@@ -55,6 +55,10 @@ export default {
     "asking": "问题"
   },
   "ui": {
+    "language": "语言",
+    "langAuto": "自动（跟随我输入的语言）",
+    "langSaved": "语言已保存",
+    "langHint": "↑↓ 选择 · Enter 保存 · Esc 返回",
     "tagline": "随手可用的股票研究台",
     "placeholder": "输入代码或问题 —— NVDA · AAPL 贵吗？ · /compare NVDA AMD",
     "askPlaceholder": "就这份报告继续提问…",
@@ -125,6 +129,73 @@ export default {
     "since": "至今",
     "help": "帮助",
     "tipQuestion": "0700.HK 现在贵吗？"
+  },
+  "methods": {
+    "title": "Verdict 独家方法",
+    "score": "Verdict 评分",
+    "bands": {
+      "strong": "强",
+      "positive": "偏强",
+      "neutral": "中性",
+      "weak": "偏弱",
+      "poor": "弱"
+    },
+    "parts": {
+      "value": "价值",
+      "evidence": "证据",
+      "fundamentals": "基本面",
+      "tape": "走势"
+    },
+    "implied": "价格隐含的增长",
+    "implied_line": "现价隐含未来 {n} 年每年增长 {g} · 过去实际 {h}/年",
+    "reads": {
+      "demanding": "预期偏高",
+      "undemanding": "预期偏低",
+      "in_line": "预期合理"
+    },
+    "range": "期权隐含波动",
+    "range_line": "{d} 天内 ±{m}（{lo}–{hi}）",
+    "range_reads": {
+      "event_priced": "期权定价的波动大于近期实际",
+      "complacent": "期权定价的波动小于近期实际",
+      "fair": "期权定价与近期波动相当"
+    },
+    "regime": "走势状态",
+    "trends": {
+      "up": "上升趋势",
+      "down": "下降趋势",
+      "turning": "趋势转折"
+    },
+    "vols": {
+      "calm": "平稳",
+      "normal": "波动正常",
+      "stormy": "波动剧烈"
+    },
+    "odds": "{n} 个月内触及各价位区间的概率",
+    "payoff": "收益风险",
+    "payoff_line": "期望 {e} · 上行 {u} · 下行 {d} · 收益/风险 {r}",
+    "payoff_reads": {
+      "favourable": "有利",
+      "balanced": "均衡",
+      "unfavourable": "不利"
+    },
+    "evidence": "证据天平",
+    "evidence_line": "看多 {b} · 看空 {r} · 中性 {x} 条发现，按来源质量加权",
+    "leans": {
+      "bullish": "偏多",
+      "bearish": "偏空",
+      "balanced": "均衡"
+    },
+    "audit": "一致性检查",
+    "consistent": "评级、估值、收益风险与证据方向一致",
+    "flags": {
+      "rating_vs_evidence": "评级与证据权重方向相反",
+      "rating_vs_value": "评级与基准估值方向相反",
+      "rating_vs_payoff": "评级与情景加权收益方向相反",
+      "confidence_vs_gaps": "存在重要数据缺口，却给出高置信度",
+      "desks_split": "各研究台分歧明显"
+    },
+    "note": "由代码根据数据和结论计算，用于检验结论，不会改动结论。"
   },
   "desks": {
     "business": "业务与财报",

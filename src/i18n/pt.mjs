@@ -55,6 +55,10 @@ export default {
     "asking": "Pergunta"
   },
   "ui": {
+    "language": "Idioma",
+    "langAuto": "Automático (segue o idioma em que escrevo)",
+    "langSaved": "Idioma salvo",
+    "langHint": "↑↓ escolher · Enter salvar · Esc voltar",
     "tagline": "uma mesa de análise para qualquer ação",
     "placeholder": "Ticker ou pergunta — PETR4.SA · AAPL está cara? · /compare NVDA AMD",
     "askPlaceholder": "Pergunte sobre este relatório…",
@@ -125,6 +129,73 @@ export default {
     "since": "desde então",
     "help": "AJUDA",
     "tipQuestion": "PETR4.SA está cara?"
+  },
+  "methods": {
+    "title": "Métodos Verdict",
+    "score": "Pontuação Verdict",
+    "bands": {
+      "strong": "forte",
+      "positive": "positiva",
+      "neutral": "neutra",
+      "weak": "fraca",
+      "poor": "ruim"
+    },
+    "parts": {
+      "value": "valor",
+      "evidence": "evidências",
+      "fundamentals": "fundamentos",
+      "tape": "tendência"
+    },
+    "implied": "Crescimento embutido no preço",
+    "implied_line": "o preço embute {g}/ano por {n} anos · realizado {h}/ano",
+    "reads": {
+      "demanding": "expectativas exigentes",
+      "undemanding": "expectativas modestas",
+      "in_line": "expectativas razoáveis"
+    },
+    "range": "Movimento implícito nas opções",
+    "range_line": "±{m} em {d} d ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "as opções precificam mais que os movimentos recentes",
+      "complacent": "as opções precificam menos que os movimentos recentes",
+      "fair": "opções em linha com os movimentos recentes"
+    },
+    "regime": "Regime de mercado",
+    "trends": {
+      "up": "tendência de alta",
+      "down": "tendência de baixa",
+      "turning": "em virada"
+    },
+    "vols": {
+      "calm": "calmo",
+      "normal": "volatilidade normal",
+      "stormy": "turbulento"
+    },
+    "odds": "Probabilidade de atingir cada faixa em {n} meses",
+    "payoff": "Perfil de retorno",
+    "payoff_line": "esperado {e} · alta {u} · baixa {d} · retorno/risco {r}",
+    "payoff_reads": {
+      "favourable": "favorável",
+      "balanced": "equilibrado",
+      "unfavourable": "desfavorável"
+    },
+    "evidence": "Balanço das evidências",
+    "evidence_line": "{b} altistas · {r} baixistas · {x} neutras, ponderadas pela qualidade da fonte",
+    "leans": {
+      "bullish": "pende para alta",
+      "bearish": "pende para baixa",
+      "balanced": "equilibrado"
+    },
+    "audit": "Checagem de consistência",
+    "consistent": "recomendação, valor, retorno e evidências concordam",
+    "flags": {
+      "rating_vs_evidence": "a recomendação e o peso das evidências apontam em direções opostas",
+      "rating_vs_value": "a recomendação e o valor base apontam em direções opostas",
+      "rating_vs_payoff": "a recomendação e o retorno ponderado por cenários apontam em direções opostas",
+      "confidence_vs_gaps": "confiança alta apesar de lacunas relevantes de dados",
+      "desks_split": "as mesas divergem fortemente"
+    },
+    "note": "Calculados pelo código a partir dos dados e da decisão; verificam o veredito, nunca o alteram."
   },
   "desks": {
     "business": "Negócio e resultados",

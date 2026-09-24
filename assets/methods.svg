@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 913 455" width="913" height="455" font-family="'JetBrains Mono','SFMono-Regular',Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="14" xml:space="preserve">
+<rect width="913" height="455" rx="12" fill="#0f1115"/>
+<rect x="0.5" y="0.5" width="912" height="454" rx="12" fill="none" stroke="#262a33"/>
+<circle cx="22" cy="17" r="6" fill="#f85149"/><circle cx="42" cy="17" r="6" fill="#d29922"/><circle cx="62" cy="17" r="6" fill="#3fb950"/>
+<text x="456.5" y="21" fill="#8b8780" font-size="12" text-anchor="middle">verdict ACME — Verdict methods</text>
+<text x="26.4" y="61.5" fill="#e8e4da" font-weight="700" textLength="33.7" lengthAdjust="spacingAndGlyphs">ACME</text>
+<text x="68.6" y="61.5" fill="#c9c5bb" textLength="33.7" lengthAdjust="spacingAndGlyphs">Acme</text>
+<text x="110.7" y="61.5" fill="#c9c5bb" textLength="67.4" lengthAdjust="spacingAndGlyphs">Robotics</text>
+<text x="186.6" y="61.5" fill="#c9c5bb" textLength="84.3" lengthAdjust="spacingAndGlyphs">(fictional</text>
+<text x="279.3" y="61.5" fill="#c9c5bb" textLength="42.1" lengthAdjust="spacingAndGlyphs">demo)</text>
+<text x="34.9" y="98.5" fill="#8b8780" textLength="59.0" lengthAdjust="spacingAndGlyphs">Verdict</text>
+<text x="102.3" y="98.5" fill="#8b8780" textLength="42.1" lengthAdjust="spacingAndGlyphs">Score</text>
+<text x="152.9" y="98.5" fill="#3fb950" font-weight="700" textLength="16.9" lengthAdjust="spacingAndGlyphs">66</text>
+<text x="169.7" y="98.5" fill="#4d525c" textLength="33.7" lengthAdjust="spacingAndGlyphs">/100</text>
+<text x="211.9" y="98.5" fill="#3fb950" textLength="84.3" lengthAdjust="spacingAndGlyphs">▰▰▰▰▰▰▰▱▱▱</text>
+<text x="304.6" y="98.5" fill="#3fb950" textLength="67.4" lengthAdjust="spacingAndGlyphs">positive</text>
+<text x="34.9" y="135.5" fill="#f5a524" font-weight="700" textLength="42.1" lengthAdjust="spacingAndGlyphs">PRICE</text>
+<text x="85.4" y="135.5" fill="#f5a524" font-weight="700" textLength="50.6" lengthAdjust="spacingAndGlyphs">LEVELS</text>
+<text x="34.9" y="154.0" fill="#f85149" textLength="8.4" lengthAdjust="spacingAndGlyphs">▌</text>
+<text x="51.7" y="154.0" fill="#e8e4da" font-weight="700" textLength="8.4" lengthAdjust="spacingAndGlyphs">&gt;</text>
+<text x="68.6" y="154.0" fill="#e8e4da" font-weight="700" textLength="25.3" lengthAdjust="spacingAndGlyphs">215</text>
+<text x="136.0" y="154.0" fill="#f85149" textLength="42.1" lengthAdjust="spacingAndGlyphs">avoid</text>
+<text x="220.3" y="154.0" fill="#58a6ff" textLength="25.3" lengthAdjust="spacingAndGlyphs">21%</text>
+<text x="270.9" y="154.0" fill="#8b8780" textLength="50.6" lengthAdjust="spacingAndGlyphs">upside</text>
+<text x="329.9" y="154.0" fill="#8b8780" textLength="16.9" lengthAdjust="spacingAndGlyphs">is</text>
+<text x="355.2" y="154.0" fill="#8b8780" textLength="25.3" lengthAdjust="spacingAndGlyphs">the</text>
+<text x="388.9" y="154.0" fill="#8b8780" textLength="75.9" lengthAdjust="spacingAndGlyphs">consensus</text>
+<text x="473.2" y="154.0" fill="#8b8780" textLength="59.0" lengthAdjust="spacingAndGlyphs">target;</text>
+<text x="540.7" y="154.0" fill="#8b8780" textLength="92.7" lengthAdjust="spacingAndGlyphs">risk/reward</text>
+<text x="641.8" y="154.0" fill="#8b8780" textLength="42.1" lengthAdjust="spacingAndGlyphs">turns</text>
+<text x="692.4" y="154.0" fill="#8b8780" textLength="67.4" lengthAdjust="spacingAndGlyphs">negative</text>
+<text x="34.9" y="172.5" fill="#d29922" textLength="8.4" lengthAdjust="spacingAndGlyphs">▌</text>
+<text x="51.7" y="172.5" fill="#e8e4da" font-weight="700" textLength="59.0" lengthAdjust="spacingAndGlyphs">175-195</text>
+<text x="136.0" y="172.5" fill="#d29922" textLength="42.1" lengthAdjust="spacingAndGlyphs">start</text>
+<text x="220.3" y="172.5" fill="#58a6ff" textLength="33.7" lengthAdjust="spacingAndGlyphs">100%</text>
+<text x="270.9" y="172.5" fill="#8b8780" textLength="33.7" lengthAdjust="spacingAndGlyphs">base</text>
+<text x="313.1" y="172.5" fill="#8b8780" textLength="33.7" lengthAdjust="spacingAndGlyphs">case</text>
+<text x="355.2" y="172.5" fill="#8b8780" textLength="50.6" lengthAdjust="spacingAndGlyphs">offers</text>
+<text x="414.2" y="172.5" fill="#8b8780" textLength="59.0" lengthAdjust="spacingAndGlyphs">~10-15%</text>
+<text x="481.6" y="172.5" fill="#8b8780" textLength="33.7" lengthAdjust="spacingAndGlyphs">with</text>
+<text x="523.8" y="172.5" fill="#8b8780" textLength="59.0" lengthAdjust="spacingAndGlyphs">limited</text>
+<text x="591.2" y="172.5" fill="#8b8780" textLength="67.4" lengthAdjust="spacingAndGlyphs">multiple</text>
+<text x="667.1" y="172.5" fill="#8b8780" textLength="33.7" lengthAdjust="spacingAndGlyphs">risk</text>
+<text x="34.9" y="191.0" fill="#3fb950" textLength="8.4" lengthAdjust="spacingAndGlyphs">▌</text>
+<text x="51.7" y="191.0" fill="#e8e4da" font-weight="700" textLength="8.4" lengthAdjust="spacingAndGlyphs">&lt;</text>
+<text x="68.6" y="191.0" fill="#e8e4da" font-weight="700" textLength="25.3" lengthAdjust="spacingAndGlyphs">160</text>
+<text x="136.0" y="191.0" fill="#3fb950" textLength="25.3" lengthAdjust="spacingAndGlyphs">add</text>
+<text x="220.3" y="191.0" fill="#58a6ff" textLength="25.3" lengthAdjust="spacingAndGlyphs">58%</text>
+<text x="270.9" y="191.0" fill="#8b8780" textLength="75.9" lengthAdjust="spacingAndGlyphs">bear-case</text>
+<text x="355.2" y="191.0" fill="#8b8780" textLength="42.1" lengthAdjust="spacingAndGlyphs">value</text>
+<text x="405.8" y="191.0" fill="#8b8780" textLength="50.6" lengthAdjust="spacingAndGlyphs">within</text>
+<text x="464.8" y="191.0" fill="#8b8780" textLength="50.6" lengthAdjust="spacingAndGlyphs">reach;</text>
+<text x="523.8" y="191.0" fill="#8b8780" textLength="25.3" lengthAdjust="spacingAndGlyphs">buy</text>
+<text x="557.5" y="191.0" fill="#8b8780" textLength="25.3" lengthAdjust="spacingAndGlyphs">the</text>
+<text x="591.2" y="191.0" fill="#8b8780" textLength="92.7" lengthAdjust="spacingAndGlyphs">dislocation</text>
+<text x="51.7" y="209.5" fill="#4d525c" textLength="8.4" lengthAdjust="spacingAndGlyphs">%</text>
+<text x="68.6" y="209.5" fill="#4d525c" textLength="33.7" lengthAdjust="spacingAndGlyphs">Odds</text>
+<text x="110.7" y="209.5" fill="#4d525c" textLength="16.9" lengthAdjust="spacingAndGlyphs">of</text>
+<text x="136.0" y="209.5" fill="#4d525c" textLength="67.4" lengthAdjust="spacingAndGlyphs">reaching</text>
+<text x="211.9" y="209.5" fill="#4d525c" textLength="33.7" lengthAdjust="spacingAndGlyphs">each</text>
+<text x="254.0" y="209.5" fill="#4d525c" textLength="33.7" lengthAdjust="spacingAndGlyphs">zone</text>
+<text x="296.2" y="209.5" fill="#4d525c" textLength="50.6" lengthAdjust="spacingAndGlyphs">within</text>
+<text x="355.2" y="209.5" fill="#4d525c" textLength="8.4" lengthAdjust="spacingAndGlyphs">3</text>
+<text x="372.1" y="209.5" fill="#4d525c" textLength="50.6" lengthAdjust="spacingAndGlyphs">months</text>
+<text x="34.9" y="246.5" fill="#f5a524" font-weight="700" textLength="59.0" lengthAdjust="spacingAndGlyphs">VERDICT</text>
+<text x="102.3" y="246.5" fill="#f5a524" font-weight="700" textLength="59.0" lengthAdjust="spacingAndGlyphs">METHODS</text>
+<text x="34.9" y="265.0" fill="#8b8780" textLength="42.1" lengthAdjust="spacingAndGlyphs">value</text>
+<text x="85.4" y="265.0" fill="#8b8780" textLength="16.9" lengthAdjust="spacingAndGlyphs">74</text>
+<text x="110.7" y="265.0" fill="#8b8780" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="127.6" y="265.0" fill="#8b8780" textLength="67.4" lengthAdjust="spacingAndGlyphs">evidence</text>
+<text x="203.5" y="265.0" fill="#8b8780" textLength="16.9" lengthAdjust="spacingAndGlyphs">59</text>
+<text x="228.8" y="265.0" fill="#8b8780" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="245.6" y="265.0" fill="#8b8780" textLength="101.2" lengthAdjust="spacingAndGlyphs">fundamentals</text>
+<text x="355.2" y="265.0" fill="#8b8780" textLength="16.9" lengthAdjust="spacingAndGlyphs">59</text>
+<text x="380.5" y="265.0" fill="#8b8780" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="397.3" y="265.0" fill="#8b8780" textLength="33.7" lengthAdjust="spacingAndGlyphs">tape</text>
+<text x="439.5" y="265.0" fill="#8b8780" textLength="16.9" lengthAdjust="spacingAndGlyphs">75</text>
+<text x="34.9" y="283.5" fill="#3fb950" textLength="8.4" lengthAdjust="spacingAndGlyphs">▸</text>
+<text x="51.7" y="283.5" fill="#8b8780" textLength="75.9" lengthAdjust="spacingAndGlyphs">Priced-in</text>
+<text x="136.0" y="283.5" fill="#8b8780" textLength="50.6" lengthAdjust="spacingAndGlyphs">growth</text>
+<text x="237.2" y="283.5" fill="#c9c5bb" textLength="42.1" lengthAdjust="spacingAndGlyphs">price</text>
+<text x="287.8" y="283.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">implies</text>
+<text x="355.2" y="283.5" fill="#c9c5bb" textLength="67.4" lengthAdjust="spacingAndGlyphs">12.9%/yr</text>
+<text x="431.1" y="283.5" fill="#c9c5bb" textLength="25.3" lengthAdjust="spacingAndGlyphs">for</text>
+<text x="464.8" y="283.5" fill="#c9c5bb" textLength="16.9" lengthAdjust="spacingAndGlyphs">10</text>
+<text x="490.1" y="283.5" fill="#c9c5bb" textLength="25.3" lengthAdjust="spacingAndGlyphs">yrs</text>
+<text x="523.8" y="283.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="540.7" y="283.5" fill="#c9c5bb" textLength="75.9" lengthAdjust="spacingAndGlyphs">delivered</text>
+<text x="625.0" y="283.5" fill="#c9c5bb" textLength="67.4" lengthAdjust="spacingAndGlyphs">18.2%/yr</text>
+<text x="700.8" y="283.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="717.7" y="283.5" fill="#c9c5bb" textLength="101.2" lengthAdjust="spacingAndGlyphs">expectations</text>
+<text x="237.2" y="302.0" fill="#c9c5bb" textLength="92.7" lengthAdjust="spacingAndGlyphs">undemanding</text>
+<text x="34.9" y="320.5" fill="#8b8780" textLength="8.4" lengthAdjust="spacingAndGlyphs">▸</text>
+<text x="51.7" y="320.5" fill="#8b8780" textLength="126.4" lengthAdjust="spacingAndGlyphs">Options-implied</text>
+<text x="186.6" y="320.5" fill="#8b8780" textLength="33.7" lengthAdjust="spacingAndGlyphs">move</text>
+<text x="237.2" y="320.5" fill="#c9c5bb" textLength="42.1" lengthAdjust="spacingAndGlyphs">±8.6%</text>
+<text x="287.8" y="320.5" fill="#c9c5bb" textLength="16.9" lengthAdjust="spacingAndGlyphs">by</text>
+<text x="313.1" y="320.5" fill="#c9c5bb" textLength="25.3" lengthAdjust="spacingAndGlyphs">23d</text>
+<text x="346.8" y="320.5" fill="#c9c5bb" textLength="126.4" lengthAdjust="spacingAndGlyphs">(160.62–190.61)</text>
+<text x="481.6" y="320.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="498.5" y="320.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">options</text>
+<text x="565.9" y="320.5" fill="#c9c5bb" textLength="16.9" lengthAdjust="spacingAndGlyphs">in</text>
+<text x="591.2" y="320.5" fill="#c9c5bb" textLength="33.7" lengthAdjust="spacingAndGlyphs">line</text>
+<text x="633.4" y="320.5" fill="#c9c5bb" textLength="33.7" lengthAdjust="spacingAndGlyphs">with</text>
+<text x="675.5" y="320.5" fill="#c9c5bb" textLength="50.6" lengthAdjust="spacingAndGlyphs">recent</text>
+<text x="734.5" y="320.5" fill="#c9c5bb" textLength="42.1" lengthAdjust="spacingAndGlyphs">moves</text>
+<text x="34.9" y="339.0" fill="#3fb950" textLength="8.4" lengthAdjust="spacingAndGlyphs">▸</text>
+<text x="51.7" y="339.0" fill="#8b8780" textLength="33.7" lengthAdjust="spacingAndGlyphs">Tape</text>
+<text x="237.2" y="339.0" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">uptrend</text>
+<text x="304.6" y="339.0" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="321.5" y="339.0" fill="#c9c5bb" textLength="50.6" lengthAdjust="spacingAndGlyphs">normal</text>
+<text x="380.5" y="339.0" fill="#c9c5bb" textLength="84.3" lengthAdjust="spacingAndGlyphs">volatility</text>
+<text x="34.9" y="357.5" fill="#3fb950" textLength="8.4" lengthAdjust="spacingAndGlyphs">▸</text>
+<text x="51.7" y="357.5" fill="#8b8780" textLength="50.6" lengthAdjust="spacingAndGlyphs">Payoff</text>
+<text x="237.2" y="357.5" fill="#c9c5bb" textLength="67.4" lengthAdjust="spacingAndGlyphs">expected</text>
+<text x="313.1" y="357.5" fill="#c9c5bb" textLength="50.6" lengthAdjust="spacingAndGlyphs">+14.3%</text>
+<text x="372.1" y="357.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="388.9" y="357.5" fill="#c9c5bb" textLength="50.6" lengthAdjust="spacingAndGlyphs">upside</text>
+<text x="447.9" y="357.5" fill="#c9c5bb" textLength="50.6" lengthAdjust="spacingAndGlyphs">+42.9%</text>
+<text x="506.9" y="357.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="523.8" y="357.5" fill="#c9c5bb" textLength="67.4" lengthAdjust="spacingAndGlyphs">downside</text>
+<text x="599.7" y="357.5" fill="#c9c5bb" textLength="33.7" lengthAdjust="spacingAndGlyphs">-20%</text>
+<text x="641.8" y="357.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="658.7" y="357.5" fill="#c9c5bb" textLength="92.7" lengthAdjust="spacingAndGlyphs">reward/risk</text>
+<text x="759.8" y="357.5" fill="#c9c5bb" textLength="25.3" lengthAdjust="spacingAndGlyphs">2.1</text>
+<text x="793.6" y="357.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="237.2" y="376.0" fill="#c9c5bb" textLength="84.3" lengthAdjust="spacingAndGlyphs">favourable</text>
+<text x="34.9" y="394.5" fill="#3fb950" textLength="8.4" lengthAdjust="spacingAndGlyphs">▸</text>
+<text x="51.7" y="394.5" fill="#8b8780" textLength="67.4" lengthAdjust="spacingAndGlyphs">Evidence</text>
+<text x="127.6" y="394.5" fill="#8b8780" textLength="59.0" lengthAdjust="spacingAndGlyphs">balance</text>
+<text x="237.2" y="394.5" fill="#c9c5bb" textLength="42.1" lengthAdjust="spacingAndGlyphs">leans</text>
+<text x="287.8" y="394.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">bullish</text>
+<text x="355.2" y="394.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">(+0.17)</text>
+<text x="422.6" y="394.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="439.5" y="394.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">8</text>
+<text x="456.4" y="394.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">bullish</text>
+<text x="523.8" y="394.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="540.7" y="394.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">5</text>
+<text x="557.5" y="394.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">bearish</text>
+<text x="625.0" y="394.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">·</text>
+<text x="641.8" y="394.5" fill="#c9c5bb" textLength="8.4" lengthAdjust="spacingAndGlyphs">3</text>
+<text x="658.7" y="394.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">neutral</text>
+<text x="726.1" y="394.5" fill="#c9c5bb" textLength="75.9" lengthAdjust="spacingAndGlyphs">findings,</text>
+<text x="237.2" y="413.0" fill="#c9c5bb" textLength="67.4" lengthAdjust="spacingAndGlyphs">weighted</text>
+<text x="313.1" y="413.0" fill="#c9c5bb" textLength="16.9" lengthAdjust="spacingAndGlyphs">by</text>
+<text x="338.3" y="413.0" fill="#c9c5bb" textLength="50.6" lengthAdjust="spacingAndGlyphs">source</text>
+<text x="397.3" y="413.0" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">quality</text>
+<text x="34.9" y="431.5" fill="#d29922" textLength="8.4" lengthAdjust="spacingAndGlyphs">▸</text>
+<text x="51.7" y="431.5" fill="#8b8780" textLength="42.1" lengthAdjust="spacingAndGlyphs">Audit</text>
+<text x="237.2" y="431.5" fill="#c9c5bb" textLength="25.3" lengthAdjust="spacingAndGlyphs">the</text>
+<text x="270.9" y="431.5" fill="#c9c5bb" textLength="42.1" lengthAdjust="spacingAndGlyphs">desks</text>
+<text x="321.5" y="431.5" fill="#c9c5bb" textLength="67.4" lengthAdjust="spacingAndGlyphs">disagree</text>
+<text x="397.3" y="431.5" fill="#c9c5bb" textLength="59.0" lengthAdjust="spacingAndGlyphs">sharply</text>
+</svg>

@@ -2,6 +2,7 @@
 // the MCP server supplies the snapshot, the exact instructions for each task, validation and
 // the final report. Same prompts, schemas, normalization and report as the terminal engine.
 
+import { methodView } from "../render/methods.mjs";
 import { knownIds, normalizeCase, normalizeDecision, normalizeDesk } from "./normalize.mjs";
 import { createRun, finishRun, loadRun, MODES, reportPath, saveMeta, savePacket } from "./pipeline.mjs";
 import { casePrompt, decisionPrompt, deskPrompt, DESKS } from "./prompts.mjs";
@@ -101,6 +102,7 @@ export function summaryMarkdown(run) {
   const q = run.snapshot?.quote;
   if (!d) return `**${run.symbol} — ${run.state}**: ${run.reason || ""}`;
   const up = upside(run);
+  const mv = methodView(run);
   return [
     `**${run.symbol}${run.name ? ` (${run.name})` : ""}: ${d.rating}** · confidence ${d.confidence}${q ? ` · price ${q.price} ${q.currency}` : ""} · value ${d.valuation.bear} / **${d.valuation.base}** / ${d.valuation.bull} ${d.valuation.currency}${up === null ? "" : ` (${up >= 0 ? "+" : ""}${up.toFixed(0)}% to base)`}`,
     "",
@@ -109,7 +111,9 @@ export function summaryMarkdown(run) {
     `- **Bull:** ${run.cases?.bull?.thesis || d.bull_case}`,
     `- **Bear:** ${run.cases?.bear?.thesis || d.bear_case}`,
     d.debate_winner !== "none" ? `- **Verdict:** ${d.debate_winner} — ${d.debate_reason}` : null,
-    `- **Price levels:** ${d.price_levels.map((l) => `${l.range} → ${l.action}`).join(" · ")}`,
+    mv.score ? `- **${mv.scoreLabel}:** ${mv.score.total}/100 (${mv.score.band}) — ${mv.score.parts.map((p) => `${p.label} ${p.value}`).join(" · ")}` : null,
+    ...mv.rows.map((r) => `- **${r.label}:** ${r.flagged ? "⚠ " : ""}${r.text}`),
+    `- **Price levels:** ${d.price_levels.map((l) => `${l.range} → ${l.action}${mv.odds.has(l.range) ? ` (${mv.odds.get(l.range)}%)` : ""}`).join(" · ")}${mv.oddsLabel ? ` — % = ${mv.oddsLabel}` : ""}`,
     `- **Position:** ${d.position.action} · ${d.position.sizing}`,
     d.risks.length ? `- **Top risks:** ${d.risks.slice(0, 3).map((r) => r.risk).join("; ")}` : null,
     `- Status: ${run.state}${run.reason ? ` (${run.reason})` : ""}`,

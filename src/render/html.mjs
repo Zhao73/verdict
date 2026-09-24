@@ -3,21 +3,14 @@
 
 import { deskTitle, ratingLabel, stanceLabel, t } from "../engine/i18n.mjs";
 import { DESKS } from "../engine/prompts.mjs";
+import { parseRange } from "../engine/ranges.mjs";
 import { allGaps, upside } from "./markdown.mjs";
+import { methodView } from "./methods.mjs";
+
+export { parseRange };
 
 const h = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const tone = (rating) => (/Buy|Overweight/.test(rating) ? "bull" : /Sell|Underweight/.test(rating) ? "bear" : "hold");
-
-/** "> 280", "205-235", "< 198", "180 – 210" → [lo, hi] (null = open end). */
-export function parseRange(text) {
-  const s = String(text).replace(/,/g, "");
-  const nums = (s.match(/\d+(?:\.\d+)?/g) || []).map(Number);
-  if (!nums.length) return null;
-  if (/^\s*[>≥]/.test(s) || /above|以上|超过/.test(s)) return [nums[0], null];
-  if (/^\s*[<≤]/.test(s) || /below|以下|低于/.test(s)) return [null, nums[0]];
-  if (nums.length >= 2) return [Math.min(nums[0], nums[1]), Math.max(nums[0], nums[1])];
-  return [nums[0], nums[0]];
-}
 
 function actionTone(action) {
   const a = String(action).toLowerCase();
@@ -78,6 +71,8 @@ export function renderHtml(run) {
   const section = (heading, body) => (body ? `<section><h2>${h(heading)}</h2>${body}</section>` : "");
   const list = (items) => (items?.length ? `<ul>${items.map((x) => `<li>${x}</li>`).join("")}</ul>` : "");
   const cite = (ids) => (ids?.length ? ` <span class="cite">${ids.map(h).join(" · ")}</span>` : "");
+  const mv = methodView(run);
+  const methods = mv.rows.length ? `${mv.score ? `<div class="score ${mv.score.tone}"><div class="dial" style="--v:${mv.score.total}"><b>${mv.score.total}</b></div><div><div class="muted">${h(mv.scoreLabel)}</div><div class="band">${h(mv.score.band)}</div><div class="muted">${mv.score.parts.map((p) => `${h(p.label)} ${p.value}`).join(" · ")}</div></div></div>` : ""}<table>${mv.rows.map((r) => `<tr><td>${h(r.label)}</td><td><span class="dot ${r.tone}"></span>${r.flagged ? "⚠ " : ""}${h(r.text)}</td></tr>`).join("")}</table><p class="muted">${h(mv.note)}</p>` : "";
 
   const debate = run.cases || d ? ["bull", "bear"].map((side) => {
     const c = run.cases?.[side];
@@ -104,7 +99,8 @@ export function renderHtml(run) {
 ${d ? `<p class="lead">${h(d.conclusion)}</p>` : ""}
 ${priceChart(run)}
 ${valuationBar(run)}
-${d ? section(L.valuation, `<p class="muted">${h(d.valuation.method)}</p><table>${d.price_levels.map((l) => `<tr><td>${h(l.range)}</td><td><span class="pill ${actionTone(l.action)}">${h(l.action)}</span></td><td>${h(l.why)}</td></tr>`).join("")}</table>`) : ""}
+${d ? section(L.valuation, `<p class="muted">${h(d.valuation.method)}</p><table>${d.price_levels.map((l) => `<tr><td>${h(l.range)}</td><td><span class="pill ${actionTone(l.action)}">${h(l.action)}</span></td>${mv.odds.size ? `<td class="odds">${mv.odds.has(l.range) ? `${mv.odds.get(l.range)}%` : "—"}</td>` : ""}<td>${h(l.why)}</td></tr>`).join("")}</table>${mv.oddsLabel ? `<p class="muted">% = ${h(mv.oddsLabel)}</p>` : ""}`) : ""}
+${section(mv.title, methods)}
 ${section(L.debate, debate ? `<div class="sides">${debate}</div>${d && d.debate_winner !== "none" ? `<p><b>${h(L.verdict)}: ${h(L.winner[d.debate_winner] || d.debate_winner)}</b> — ${h(d.debate_reason)}</p>` : ""}` : "")}
 ${d ? section(L.catalysts, list(d.catalysts.map((c) => `<b>${h(c.timing)}</b> · ${h(c.event)} <span class="muted">(${h(c.direction)})</span>`))) : ""}
 ${d ? section(L.risks, list(d.risks.map((r) => `<span class="pill ${r.severity === "high" ? "bear" : "hold"}">${h(L.levels[r.severity] || r.severity)}</span> ${h(r.risk)}`))) : ""}
@@ -148,6 +144,12 @@ table{width:100%;border-collapse:collapse;font-size:14px}td{padding:6px 8px;bord
 .src td{font-size:12px}code,.cite{font:12px ui-monospace,Menlo,monospace;color:var(--muted)}a{color:var(--accent)}
 details{border-top:1px solid var(--line);padding:8px 0}summary{cursor:pointer;font-weight:600}
 ul{padding-left:20px;margin:6px 0}footer{margin-top:28px;font-size:12px;color:var(--muted)}
+.score{display:flex;gap:16px;align-items:center;margin-bottom:12px}.band{font-weight:700;font-size:16px}
+.dial{--c:var(--hold);width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--v)*1%),var(--line) 0)}
+.dial b{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;background:var(--card);font-size:18px}
+.score.bull .dial{--c:var(--bull)}.score.bear .dial{--c:var(--bear)}.score.bull .band{color:var(--bull)}.score.bear .band{color:var(--bear)}.score.hold .band{color:var(--hold)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;background:var(--muted)}.dot.bull{background:var(--bull)}.dot.bear{background:var(--bear)}.dot.hold{background:var(--hold)}
+.odds{font:600 13px ui-monospace,Menlo,monospace;color:var(--accent);white-space:nowrap}
 @media (max-width:640px){.sides,.grid3{grid-template-columns:1fr}h1{font-size:24px}}
 </style></head><body><main>${body}</main></body></html>
 `;

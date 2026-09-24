@@ -55,6 +55,10 @@ export default {
     "asking": "질문"
   },
   "ui": {
+    "language": "언어",
+    "langAuto": "자동 (입력한 언어를 따름)",
+    "langSaved": "언어가 저장되었습니다",
+    "langHint": "↑↓ 선택 · Enter 저장 · Esc 뒤로",
     "tagline": "어떤 종목이든 바로 쓰는 리서치 데스크",
     "placeholder": "티커 또는 질문 — 005930.KS · AAPL 비싸? · /compare NVDA AMD",
     "askPlaceholder": "이 리포트에 대해 질문하세요…",
@@ -125,6 +129,73 @@ export default {
     "since": "이후",
     "help": "도움말",
     "tipQuestion": "005930.KS 지금 비싸?"
+  },
+  "methods": {
+    "title": "Verdict 고유 방법론",
+    "score": "Verdict 점수",
+    "bands": {
+      "strong": "강함",
+      "positive": "양호",
+      "neutral": "중립",
+      "weak": "약함",
+      "poor": "부진"
+    },
+    "parts": {
+      "value": "가치",
+      "evidence": "근거",
+      "fundamentals": "펀더멘털",
+      "tape": "주가 흐름"
+    },
+    "implied": "주가에 반영된 성장",
+    "implied_line": "현재 주가는 향후 {n}년간 연 {g} 성장을 반영 · 실제 성장 연 {h}",
+    "reads": {
+      "demanding": "기대가 높음",
+      "undemanding": "기대가 낮음",
+      "in_line": "기대가 적정"
+    },
+    "range": "옵션 내재 변동",
+    "range_line": "{d}일 내 ±{m} ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "옵션이 최근 실제보다 큰 변동을 반영",
+      "complacent": "옵션이 최근 실제보다 작은 변동을 반영",
+      "fair": "옵션이 최근 변동과 비슷한 수준"
+    },
+    "regime": "시장 국면",
+    "trends": {
+      "up": "상승 추세",
+      "down": "하락 추세",
+      "turning": "추세 전환 중"
+    },
+    "vols": {
+      "calm": "안정",
+      "normal": "보통 변동성",
+      "stormy": "변동성 확대"
+    },
+    "odds": "{n}개월 안에 각 가격대에 도달할 확률",
+    "payoff": "손익 구조",
+    "payoff_line": "기대 {e} · 상승 {u} · 하락 {d} · 보상/위험 {r}",
+    "payoff_reads": {
+      "favourable": "유리",
+      "balanced": "균형",
+      "unfavourable": "불리"
+    },
+    "evidence": "근거 균형",
+    "evidence_line": "강세 {b} · 약세 {r} · 중립 {x}건 (출처 품질로 가중)",
+    "leans": {
+      "bullish": "강세 우위",
+      "bearish": "약세 우위",
+      "balanced": "균형"
+    },
+    "audit": "일관성 점검",
+    "consistent": "등급·가치·손익·근거의 방향이 일치",
+    "flags": {
+      "rating_vs_evidence": "등급과 근거의 무게가 반대 방향",
+      "rating_vs_value": "등급과 기준 가치가 반대 방향",
+      "rating_vs_payoff": "등급과 시나리오 가중 손익이 반대 방향",
+      "confidence_vs_gaps": "중요한 데이터 공백이 있는데도 확신도가 높음",
+      "desks_split": "리서치 데스크 간 의견이 크게 갈림"
+    },
+    "note": "데이터와 결론을 바탕으로 코드가 계산합니다. 결론을 검증할 뿐 바꾸지 않습니다."
   },
   "desks": {
     "business": "사업과 실적",

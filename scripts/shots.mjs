@@ -146,7 +146,23 @@ writeFileSync(join(assets, "live.svg"), toSvg([head, "", ...live], { cols: 104, 
 const card = verdictLines(run, 100).map((l) => ` ${l}`);
 writeFileSync(join(assets, "card.svg"), toSvg(card.slice(0, 44), { cols: 104, title: "verdict ACME — result" }));
 
-// 5. PNGs: HTML report and icon (optional)
+// 5. the Verdict methods: score, price levels with odds, and the method rows
+const plainOf = (l) => l.replace(/\x1b\[[0-9;]*m/g, "");
+const at = (re) => card.findIndex((l) => re.test(plainOf(l)));
+const scoreRow = at(/Verdict Score/);
+const levelsRow = at(/PRICE LEVELS/);
+const bullRow = at(/BULL CASE/);
+writeFileSync(join(assets, "methods.svg"), toSvg([card[0], "", card[scoreRow], "", ...card.slice(levelsRow, bullRow - 1)], { cols: 104, title: "verdict ACME — Verdict methods" }));
+
+// 6. the language picker (/lang)
+const picker = new App({ cols: 100, rows: 22, language: "en", backendFactory: async () => backend, clock });
+picker.stdin = {};
+await picker.command("/lang");
+for (let i = 0; i < 4; i += 1) picker.handleKey({ name: "down" });
+f = picker.buildFrame();
+writeFileSync(join(assets, "language.svg"), toSvg(Array.from({ length: f.h }, (_, y) => f.rowString(y)), { cols: f.w, title: "verdict — /lang" }));
+
+// 7. PNGs: HTML report and icon (optional)
 try {
   const { chromium } = await import(process.env.PLAYWRIGHT_CORE || "playwright-core");
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
@@ -161,4 +177,4 @@ try {
 } catch (error) {
   console.log(`png skipped: ${error.message.split("\n")[0]}`);
 }
-console.log("svg: app.svg evidence.svg live.svg card.svg");
+console.log("svg: app.svg evidence.svg live.svg card.svg methods.svg language.svg");

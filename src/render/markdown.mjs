@@ -1,6 +1,7 @@
 // The saved report, assembled by code from the recorded packets: nothing a model summarised
 // away can go missing, and every citation is checked against the source table.
 
+import { methodView } from "./methods.mjs";
 import { deskTitle, ratingLabel, stanceLabel, t } from "../engine/i18n.mjs";
 import { DESKS } from "../engine/prompts.mjs";
 
@@ -23,6 +24,8 @@ export function renderReport(run) {
   const rated = d ? (ratingLabel(d.rating, run.language) === d.rating ? d.rating : `${ratingLabel(d.rating, run.language)} (${d.rating})`) : run.state;
   const meta = [`**${L.verdict}: ${rated}**`];
   if (d) meta.push(`${L.confidence} ${L.levels[d.confidence] || d.confidence}`);
+  const mv = methodView(run);
+  if (mv.score) meta.push(`${mv.scoreLabel} **${mv.score.total}/100** (${mv.score.band})`);
   meta.push(run.as_of, run.mode);
   if (run.elapsed_ms) meta.push(`${L.elapsed} ${Math.round(run.elapsed_ms / 1000)}s`);
   if (run.state !== "complete") meta.push(`${L.status}: ${run.state}`);
@@ -60,7 +63,16 @@ export function renderReport(run) {
     const v = d.valuation;
     out.push(`## ${L.valuation}`);
     out.push(v.method);
-    out.push(["| | | |", "|---|---|---|", ...d.price_levels.map((l) => `| ${esc(l.range)} | **${esc(l.action)}** | ${esc(l.why)} |`)].join("\n"));
+    if (mv.odds.size) {
+      out.push(["| | | % | |", "|---|---|---|---|", ...d.price_levels.map((l) => `| ${esc(l.range)} | **${esc(l.action)}** | ${mv.odds.has(l.range) ? `${mv.odds.get(l.range)}%` : "—"} | ${esc(l.why)} |`)].join("\n"), `_% = ${mv.oddsLabel}_`);
+    } else {
+      out.push(["| | | |", "|---|---|---|", ...d.price_levels.map((l) => `| ${esc(l.range)} | **${esc(l.action)}** | ${esc(l.why)} |`)].join("\n"));
+    }
+    if (mv.rows.length) {
+      out.push(`## ${mv.title}`);
+      if (mv.score) out.push(`**${mv.scoreLabel}: ${mv.score.total}/100 — ${mv.score.band}** · ${mv.score.parts.map((p) => `${p.label} ${p.value}`).join(" · ")}`);
+      out.push(["| | |", "|---|---|", ...mv.rows.map((r) => `| ${esc(r.label)} | ${r.flagged ? "⚠ " : ""}${esc(r.text)} |`)].join("\n"), `_${mv.note}_`);
+    }
     if (d.catalysts.length) out.push(`## ${L.catalysts}`, d.catalysts.map((c) => `- **${c.timing}** · ${c.event} (${c.direction})`).join("\n"));
     if (d.risks.length) out.push(`## ${L.risks}`, d.risks.map((r) => `- **${L.levels[r.severity] || r.severity}** · ${r.risk}`).join("\n"));
     out.push(`## ${L.position}`, `**${d.position.action}** · ${d.position.sizing}`, [`- ${L.entry}: ${d.position.entry}`, `- ${L.exit}: ${d.position.exit}`].join("\n"));

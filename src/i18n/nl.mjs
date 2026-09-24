@@ -55,6 +55,10 @@ export default {
     "asking": "Vraag"
   },
   "ui": {
+    "language": "Taal",
+    "langAuto": "Automatisch (volgt de taal waarin ik typ)",
+    "langSaved": "Taal opgeslagen",
+    "langHint": "↑↓ kiezen · Enter opslaan · Esc terug",
     "tagline": "een onderzoeksdesk voor elk aandeel",
     "placeholder": "Ticker of vraag — ASML.AS · is AAPL duur? · /compare NVDA AMD",
     "askPlaceholder": "Stel een vraag over dit rapport…",
@@ -125,6 +129,73 @@ export default {
     "since": "sindsdien",
     "help": "HULP",
     "tipQuestion": "is ASML.AS duur?"
+  },
+  "methods": {
+    "title": "Verdict-methoden",
+    "score": "Verdict-score",
+    "bands": {
+      "strong": "sterk",
+      "positive": "positief",
+      "neutral": "neutraal",
+      "weak": "zwak",
+      "poor": "slecht"
+    },
+    "parts": {
+      "value": "waarde",
+      "evidence": "bewijs",
+      "fundamentals": "fundamentals",
+      "tape": "koersverloop"
+    },
+    "implied": "Ingeprijsde groei",
+    "implied_line": "de koers prijst {g}/jaar in voor {n} jaar · gerealiseerd {h}/jaar",
+    "reads": {
+      "demanding": "verwachtingen hoog",
+      "undemanding": "verwachtingen bescheiden",
+      "in_line": "verwachtingen redelijk"
+    },
+    "range": "Door opties geïmpliceerde beweging",
+    "range_line": "±{m} binnen {d} d ({lo}–{hi})",
+    "range_reads": {
+      "event_priced": "opties prijzen meer in dan recente bewegingen",
+      "complacent": "opties prijzen minder in dan recente bewegingen",
+      "fair": "opties in lijn met recente bewegingen"
+    },
+    "regime": "Marktregime",
+    "trends": {
+      "up": "opwaartse trend",
+      "down": "neerwaartse trend",
+      "turning": "kentering"
+    },
+    "vols": {
+      "calm": "rustig",
+      "normal": "normale volatiliteit",
+      "stormy": "onstuimig"
+    },
+    "odds": "Kans om elke zone binnen {n} maanden te bereiken",
+    "payoff": "Rendementsprofiel",
+    "payoff_line": "verwacht {e} · opwaarts {u} · neerwaarts {d} · rendement/risico {r}",
+    "payoff_reads": {
+      "favourable": "gunstig",
+      "balanced": "evenwichtig",
+      "unfavourable": "ongunstig"
+    },
+    "evidence": "Bewijsbalans",
+    "evidence_line": "{b} positieve · {r} negatieve · {x} neutrale bevindingen, gewogen naar bronkwaliteit",
+    "leans": {
+      "bullish": "neigt positief",
+      "bearish": "neigt negatief",
+      "balanced": "in evenwicht"
+    },
+    "audit": "Consistentiecontrole",
+    "consistent": "rating, waarde, rendement en bewijs wijzen dezelfde kant op",
+    "flags": {
+      "rating_vs_evidence": "rating en gewicht van het bewijs wijzen tegengestelde kanten op",
+      "rating_vs_value": "rating en basiswaarde wijzen tegengestelde kanten op",
+      "rating_vs_payoff": "rating en scenario-gewogen rendement wijzen tegengestelde kanten op",
+      "confidence_vs_gaps": "hoog vertrouwen ondanks belangrijke datalacunes",
+      "desks_split": "de desks zijn het sterk oneens"
+    },
+    "note": "Door de code berekend uit de feiten en het besluit; ze toetsen het oordeel en veranderen het nooit."
   },
   "desks": {
     "business": "Bedrijf en resultaten",
