@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="assets/verdict-demo.mp4"><img src="assets/demo.gif" alt="Verdict 데모 (가상 기업)" width="100%"></a>
+  <a href="assets/verdict-motion.mp4"><img src="assets/verdict-motion.webp" alt="Verdict 데모 (가상 기업)" width="100%"></a>
 </p>
 <p align="center"><sub>▶ 제품 영상: <a href="assets/verdict-motion.mp4">English</a> · <a href="assets/verdict-motion.zh-CN.mp4">中文</a> · 실제 데모: <a href="assets/verdict-demo.mp4">English</a></sub></p>
 

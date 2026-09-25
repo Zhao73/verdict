@@ -31,7 +31,7 @@
 </p>
 
 <p align="center">
-  <a href="assets/verdict-demo.mp4"><img src="assets/demo.gif" alt="Verdict researching a fictional company: live desks, bull vs bear, the verdict, Verdict methods and 11 languages" width="100%"></a>
+  <a href="assets/verdict-motion.mp4"><img src="assets/verdict-motion.webp" alt="Verdict in motion: a question becomes live data, four analysts, bull vs bear, a verdict with a Verdict Score, price levels with odds, 11 languages" width="100%"></a>
 </p>
 <p align="center"><sub>▶ Product video: <a href="assets/verdict-motion.mp4">English</a> · <a href="assets/verdict-motion.zh-CN.mp4">中文</a> &nbsp;·&nbsp; walkthrough: <a href="assets/verdict-demo.mp4">English</a> · <a href="assets/verdict-demo.zh-CN.mp4">中文</a> &nbsp;·&nbsp; <a href="https://zhao73.github.io/verdict/">website</a> — the demo company is fictional</sub></p>
 
@@ -163,11 +163,13 @@ verdict demo           # stream mode
 verdict demo --app     # the full-screen app
 ```
 
+Or just read what it produces: [a full sample report](examples/ACME.en.md) ([中文](examples/ACME.zh-CN.md)).
+
 ## The app
 
 Run `verdict` with no arguments.
 
-<p align="center"><img src="assets/app.svg" alt="The Verdict tab: rating, Verdict Score, value range and price levels" width="100%"></p>
+<p align="center"><img src="assets/demo.gif" alt="The real app researching a fictional company: live desks, bull vs bear, the verdict, Verdict methods and 11 languages" width="100%"></p>
 
 <p align="center"><img src="assets/evidence.svg" alt="Evidence tab: findings with their sources" width="100%"></p>
 

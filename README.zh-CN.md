@@ -31,7 +31,7 @@
 </p>
 
 <p align="center">
-  <a href="assets/verdict-demo.zh-CN.mp4"><img src="assets/demo.zh-CN.gif" alt="Verdict 研究一家虚构公司：研究台实时进度、多空辩论、结论、独家方法和 11 种语言" width="100%"></a>
+  <a href="assets/verdict-motion.zh-CN.mp4"><img src="assets/verdict-motion.zh-CN.webp" alt="Verdict 动效演示：一个问题变成实时数据、四位分析师、多空辩论、带 Verdict 评分的结论、带概率的价格条件和 11 种语言" width="100%"></a>
 </p>
 <p align="center"><sub>▶ 产品视频：<a href="assets/verdict-motion.zh-CN.mp4">中文</a> · <a href="assets/verdict-motion.mp4">English</a> &nbsp;·&nbsp; 实机演示：<a href="assets/verdict-demo.zh-CN.mp4">中文</a> · <a href="assets/verdict-demo.mp4">English</a> &nbsp;·&nbsp; <a href="https://zhao73.github.io/verdict/?lang=zh">项目主页</a> —— 演示使用虚构公司</sub></p>
 
@@ -149,11 +149,13 @@ verdict demo           # 命令行模式
 verdict demo --app     # 全屏应用
 ```
 
+也可以直接看它的产出：[一份完整的示例报告](examples/ACME.zh-CN.md)（[English](examples/ACME.en.md)）。
+
 ## 全屏应用
 
 直接运行 `verdict`，不带任何参数。
 
-<p align="center"><img src="assets/app.svg" alt="结论页：评级、Verdict 评分、估值区间和价格条件" width="100%"></p>
+<p align="center"><img src="assets/demo.zh-CN.gif" alt="实机演示：研究一家虚构公司的全过程" width="100%"></p>
 
 <p align="center"><img src="assets/evidence.svg" alt="证据页：每条发现和它的来源" width="100%"></p>
 

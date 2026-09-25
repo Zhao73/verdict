@@ -66,7 +66,8 @@
     "shots": "node scripts/shots.mjs",
     "video": "node scripts/video.mjs",
     "motion": "node scripts/motion.mjs",
-    "site": "node scripts/site.mjs"
+    "site": "node scripts/site.mjs",
+    "examples": "node scripts/examples.mjs"
   },
   "publishConfig": {
     "access": "public"
