@@ -38,4 +38,6 @@ the terminal (`bin/verdict.mjs`), a Claude Code plugin and a Codex plugin.
 - Anything the MCP server imports must stay dependency-free (plugins run without `npm install`).
 - Runtime data lives in `~/.verdict/` (`VERDICT_HOME`); never commit it.
 - Screenshots and examples use the fictional ACME demo, never invented numbers for real companies.
-- Before committing: `npm test` (offline). Regenerate README images with `npm run shots`.
+- Before committing: `npm test` (offline). Regenerate README images with `npm run shots`, the product
+  motion video with `npm run motion`, the app walkthrough and GIFs with `npm run video` (needs playwright-core, Chromium and ffmpeg; see the header
+  of `scripts/video.mjs`) and the Pages site with `npm run site`.

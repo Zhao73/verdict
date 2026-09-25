@@ -9,7 +9,19 @@
 
 <p align="center"><a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a></p>
 
-<p align="center"><img src="assets/app.svg" alt="Verdict 전체 화면 앱 (가상 기업 예시)" width="100%"></p>
+<p align="center">
+  <a href="https://github.com/Zhao73/verdict/actions/workflows/ci.yml"><img src="https://github.com/Zhao73/verdict/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/Zhao73/verdict/releases"><img src="https://img.shields.io/github/v/release/Zhao73/verdict?color=f5a524&label=release" alt="release"></a>
+  <img src="https://img.shields.io/badge/macOS%20%C2%B7%20Linux%20%C2%B7%20Windows-supported-58a6ff" alt="macOS · Linux · Windows">
+  <img src="https://img.shields.io/badge/languages-11-f5a524" alt="11 languages">
+  <img src="https://img.shields.io/badge/Claude%20Code%20%C2%B7%20Codex-plugin-8a63d2" alt="Claude Code · Codex plugin">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8b8780" alt="MIT"></a>
+</p>
+
+<p align="center">
+  <a href="assets/verdict-demo.mp4"><img src="assets/demo.gif" alt="Verdict 데모 (가상 기업)" width="100%"></a>
+</p>
+<p align="center"><sub>▶ 제품 영상: <a href="assets/verdict-motion.mp4">English</a> · <a href="assets/verdict-motion.zh-CN.mp4">中文</a> · 실제 데모: <a href="assets/verdict-demo.mp4">English</a></sub></p>
 
 ## 무엇을 얻나요
 
@@ -77,5 +89,7 @@ verdict doctor
 `/verdict 삼성전자`처럼 쓰면 됩니다. Codex에서는 `codex plugin marketplace add Zhao73/verdict` 후 `@verdict 삼성전자 분석해줘`.
 
 지원 언어는 11개(한국어·영어·중국어 간체/번체·일본어·프랑스어·독일어·스페인어·이탈리아어·포르투갈어·네덜란드어), 지원 시장은 미국·한국·일본·중국·홍콩·대만·영국·유럽·호주 등입니다. 자세한 내용은 [English README](README.md#languages--markets)를 참고하세요.
+
+<p align="center"><b>도움이 됐다면 ⭐ 하나가 다른 사람들이 찾는 데 큰 힘이 됩니다.</b></p>
 
 <sub>공개 자료를 바탕으로 AI가 생성한 리서치입니다. 투자 조언이 아니며 틀릴 수 있습니다. MIT 라이선스.</sub>

@@ -63,6 +63,8 @@ export function pad(s, n) {
 }
 
 /** Word-wrap plain text to a display width, keeping CJK breakable anywhere. */
+const NO_LINE_START = /^[，。、；：！？）」』】〉》”’…ー・．｡､]$/;
+
 export function wrapText(text, max) {
   const out = [];
   for (const para of String(text).split("\n")) {
@@ -79,9 +81,19 @@ export function wrapText(text, max) {
         continue;
       }
       if (lw + tw > max && lw > 0) {
-        out.push(line.trimEnd());
-        line = "";
-        lw = 0;
+        // CJK line-breaking: closing punctuation never starts a line; carry the last character
+        // down with it instead.
+        const chars = [...line];
+        if (NO_LINE_START.test(tok) && chars.length > 1 && !/\s/.test(chars.at(-1))) {
+          const carry = chars.pop();
+          out.push(chars.join("").trimEnd());
+          line = carry;
+          lw = width(carry);
+        } else {
+          out.push(line.trimEnd());
+          line = "";
+          lw = 0;
+        }
       }
       if (tw > max) {
         for (const ch of tok) {

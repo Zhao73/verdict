@@ -1,6 +1,6 @@
 {
   "name": "@zhao73/verdict",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A research desk for any stock, in any market and 11 languages — in your terminal, Claude Code and Codex: live data, parallel analysts, a bull-vs-bear debate and a clear verdict with price levels.",
   "type": "module",
   "license": "MIT",
@@ -63,7 +63,13 @@
   "scripts": {
     "start": "node bin/verdict.mjs",
     "test": "node scripts/test.mjs",
-    "shots": "node scripts/shots.mjs"
+    "shots": "node scripts/shots.mjs",
+    "video": "node scripts/video.mjs",
+    "motion": "node scripts/motion.mjs",
+    "site": "node scripts/site.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0"

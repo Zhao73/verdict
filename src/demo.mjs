@@ -2,6 +2,7 @@
 // market data — ACME Robotics does not exist. Used for first runs, screenshots and tests.
 
 import { evaluateLenses, LENS_IDS } from "./engine/lenses.mjs";
+import * as ZH from "./demo.zh-CN.mjs";
 
 const SYMBOL = "ACME";
 
@@ -95,13 +96,17 @@ const DESK = {
 };
 DESK.all = { ...DESK.business, findings: [...DESK.business.findings.slice(0, 2), ...DESK.street.findings.slice(2), DESK.news.findings[2]], key_numbers: [...DESK.street.key_numbers] };
 
-function deskPacket(id) {
+// Simplified Chinese words over the same numbers; `all` mixes desks exactly as DESK.all does.
+const ZH_DESK = { ...ZH.DESK, all: { ...ZH.DESK.business, findings: [...ZH.DESK.business.findings.slice(0, 2), ...ZH.DESK.street.findings.slice(2), ZH.DESK.news.findings[2]], key_numbers: [...ZH.DESK.street.key_numbers] } };
+
+function deskPacket(id, zh = false) {
   const d = DESK[id];
+  const z = zh ? ZH_DESK[id] : null;
   return {
-    summary: d.summary,
+    summary: z ? z.summary : d.summary,
     stance: d.stance,
-    findings: d.findings.map(([claim, impact, sources]) => ({ claim, impact, sources })),
-    key_numbers: d.key_numbers.map(([label, value, source]) => ({ label, value, source })),
+    findings: d.findings.map(([claim, impact, sources], i) => ({ claim: z ? z.findings[i] : claim, impact, sources })),
+    key_numbers: d.key_numbers.map(([label, value, source], i) => ({ label: z ? z.key_numbers[i][0] : label, value: z ? z.key_numbers[i][1] : value, source })),
     sources: [1, 2, 3].map((n) => ({ id: `S${n}`, title: `Demo source ${n} for the ${id} desk (fictional)`, url: `https://example.com/demo/${id}/${n}`, date: "2026-09-1" + n })),
     gaps: id === "street" ? ["no independent survey of end-customer demand"] : [],
   };
@@ -164,6 +169,32 @@ const DECISION = {
   key_sources: ["business:S1", "street:S1", "street:S3", "news:N1", "data:fundamentals", "data:options"],
 };
 
+function zhCase(side) {
+  const c = CASES[side];
+  const z = ZH.CASES[side];
+  return { ...c, thesis: z.thesis, points: c.points.map((p, i) => ({ ...p, point: z.points[i] })), answer_to_other_side: z.answer_to_other_side, would_change_my_mind: z.would_change_my_mind };
+}
+
+function zhDecision() {
+  const z = ZH.DECISION;
+  return {
+    ...DECISION,
+    conclusion: z.conclusion,
+    confidence_reason: z.confidence_reason,
+    debate_reason: z.debate_reason,
+    bull_case: ZH.CASES.bull.thesis,
+    bear_case: ZH.CASES.bear.thesis,
+    valuation: { ...DECISION.valuation, method: z.method },
+    price_levels: DECISION.price_levels.map((l, i) => ({ range: l.range, action: z.price_levels[i][0], why: z.price_levels[i][1] })),
+    catalysts: DECISION.catalysts.map((c, i) => ({ ...c, event: z.catalysts[i][0], timing: z.catalysts[i][1] })),
+    risks: DECISION.risks.map((r, i) => ({ ...r, risk: z.risks[i] })),
+    position: z.position,
+    horizons: z.horizons,
+    invalidation: z.invalidation,
+    gaps: z.gaps,
+  };
+}
+
 const ACTIVITY = {
   business: ["search: Acme Robotics Q2 results segment revenue", "read: example.com/demo/10-q", "search: Acme earnings call transcript backlog"],
   street: ["search: Acme consensus EPS 2027 revisions", "search: Acme price target changes", "read: example.com/demo/estimates"],
@@ -188,33 +219,37 @@ export function createDemoBackend({ speed = 1 } = {}) {
     models: { research: "demo", debate: "demo", decision: "demo", chat: "demo" },
     snapshotFor: async (symbol) => (symbol === SYMBOL ? demoSnapshot() : null),
     async call(req) {
+      // The prompts end with "Write all prose in Simplified Chinese (zh-CN)" when asked for it.
+      const zh = /\(zh-CN\)/.test(`${req.system}\n${req.user}`);
       if (req.tier === "research") {
         const id = (Object.keys(ACTIVITY).find((k) => req.system.includes(`"${{ business: "Business & earnings", street: "Expectations & valuation", news: "News, industry & catalysts", risk: "Positioning & risk", all: "Research" }[k]}"`))) || "all";
-        for (const a of ACTIVITY[id]) {
+        for (const a of (zh ? ZH.ACTIVITY : ACTIVITY)[id]) {
           req.onActivity?.(a);
           await sleep(ms(700 + Math.random() * 700), req.signal);
         }
-        return { data: deskPacket(id), costUsd: 0 };
+        return { data: deskPacket(id, zh), costUsd: 0 };
       }
       if (req.tier === "debate") {
         await sleep(ms(1500), req.signal);
-        return { data: CASES[/BULL/.test(req.system) ? "bull" : "bear"], costUsd: 0 };
+        const side = /BULL/.test(req.system) ? "bull" : "bear";
+        return { data: zh ? zhCase(side) : CASES[side], costUsd: 0 };
       }
       if (req.tier === "decision" && !req.schema?.properties?.ranking) {
-        const json = JSON.stringify(DECISION);
+        const decision = zh ? zhDecision() : DECISION;
+        const json = JSON.stringify(decision);
         for (let i = 0; i < json.length; i += 24) {
           req.onText?.(json.slice(i, i + 24));
           await sleep(ms(25), req.signal);
         }
-        return { data: DECISION, costUsd: 0 };
+        return { data: decision, costUsd: 0 };
       }
       if (req.schema?.properties?.ranking) {
         const syms = [...req.user.matchAll(/^([A-Z0-9.^-]+)(?: \(|:)/gm)].map((m) => m[1]);
         return { data: { summary: "Demo ranking of fictional data.", ranking: syms.map((symbol, i) => ({ symbol, rank: i + 1, why: "demo" })) }, costUsd: 0 };
       }
-      const answer = "In this demo the answer comes from the fictional report: the entry zone is 175-195 USD and the thesis breaks if operating margin falls below 18%.";
-      for (const word of answer.split(" ")) {
-        req.onText?.(`${word} `);
+      const answer = zh ? ZH.ANSWER : "In this demo the answer comes from the fictional report: the entry zone is 175-195 USD and the thesis breaks if operating margin falls below 18%.";
+      for (const word of zh ? [...answer] : answer.split(" ")) {
+        req.onText?.(zh ? word : `${word} `);
         await sleep(ms(30), req.signal);
       }
       return { text: answer, costUsd: 0 };
@@ -223,3 +258,6 @@ export function createDemoBackend({ speed = 1 } = {}) {
 }
 
 export const DEMO_SYMBOL = SYMBOL;
+
+/** What each desk "searches" in the demo, by language (used by scripts/video.mjs). */
+export const DEMO_ACTIVITY = { en: ACTIVITY, "zh-CN": ZH.ACTIVITY };

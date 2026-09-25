@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdict — a research desk for any stock</title>
+<meta name="description" content="Open-source AI equity research in your terminal, Claude Code and Codex: live data, four analysts in parallel, bull vs bear, and one clear verdict with price levels, odds and a Verdict Score. 11 languages, any market.">
+<meta property="og:title" content="Verdict — a research desk for any stock">
+<meta property="og:description" content="Live data · four analysts in parallel · bull vs bear · one clear verdict. Terminal, Claude Code & Codex. 11 languages, any market. Open source.">
+<meta property="og:image" content="social.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="logo.svg">
+<style>
+:root{--bg:#0a0c10;--panel:#12151c;--line:#232833;--fg:#ece8de;--muted:#a09c93;--faint:#6b675f;--accent:#f5a524;--bull:#3fb950;--bear:#f85149;--info:#58a6ff}
+*{box-sizing:border-box}
+html[data-lang=en] [lang=zh],html[data-lang=zh] [lang=en]{display:none}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans","Microsoft YaHei",sans-serif}
+a{color:var(--accent);text-decoration:none}
+code,pre{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.24em;color:var(--accent)}
+.brand img{width:30px;height:30px}
+.navr{display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 16px;font-weight:600;border:1px solid var(--line);color:var(--fg);background:var(--panel);cursor:pointer;font-size:15px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#1b1400}
+.hero{padding:56px 0 28px;text-align:center;background:radial-gradient(800px 400px at 50% 0,rgba(245,165,36,.12),transparent 70%)}
+.hero h1{font-size:clamp(34px,6vw,64px);line-height:1.05;letter-spacing:-.02em;margin:0 0 16px}
+.hero p{font-size:clamp(17px,2.2vw,21px);color:var(--muted);max-width:760px;margin:0 auto 26px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.install{display:inline-flex;align-items:center;gap:10px;margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:15px;max-width:100%;overflow-x:auto}
+.install .p{color:var(--accent)}
+.video{margin:34px auto 0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 100px rgba(0,0,0,.55)}
+.video video{display:block;width:100%;height:auto;background:#000}
+section{padding:64px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(26px,3.6vw,36px);margin:0 0 10px;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:760px;margin:0 0 30px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{margin:0 0 6px;font-size:18px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.card .k{font:700 12px/1 "JetBrains Mono",monospace;letter-spacing:.12em;color:var(--accent);margin-bottom:10px;display:block}
+.methods{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.m{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.m b{display:block}
+.m span{color:var(--muted);font-size:15px}
+.m i{font-style:normal;font:700 11px/1 "JetBrains Mono",monospace;padding:6px 8px;border-radius:6px;background:#1d2230;color:var(--info);white-space:nowrap}
+.m i.after{color:var(--bull)}
+.score{display:flex;gap:18px;align-items:center;margin-top:18px;color:var(--muted)}
+.dial{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--bull) 66%,var(--line) 0);flex:none}
+.dial b{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--bg);font-size:22px;color:var(--fg)}
+.langs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.langs span{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:15px;background:var(--panel)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:8px;padding:8px 14px;font:600 14px Inter,sans-serif;cursor:pointer}
+.tabs button.on{color:#1b1400;background:var(--accent);border-color:var(--accent)}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;font-size:15px;line-height:1.7;margin:0}
+pre .c{color:var(--faint)}
+.reports{display:flex;gap:12px;flex-wrap:wrap}
+footer{padding:36px 0 56px;border-top:1px solid var(--line);color:var(--faint);font-size:14px;text-align:center}
+@media (max-width:820px){.grid{grid-template-columns:1fr 1fr}.methods{grid-template-columns:1fr}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}.install code{white-space:nowrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand"><img src="logo.svg" alt="">VERDICT</div>
+    <div class="navr">
+      <button class="btn" id="lang" type="button"><span lang="en">中文</span><span lang="zh">English</span></button>
+      <a class="btn primary" href="https://github.com/Zhao73/verdict">★ <span lang="en">Star on GitHub</span><span lang="zh">GitHub 点 Star</span></a>
+    </div>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <h1><span lang="en">A research desk for any stock</span><span lang="zh">随手可用的股票研究台</span></h1>
+    <p>
+      <span lang="en">Ask about a stock the way you'd ask a colleague. Live data in seconds, four AI analysts in parallel, a bull-vs-bear debate, and one clear verdict with price levels, the odds of reaching them, and a Verdict Score. In your terminal, Claude Code and Codex.</span>
+      <span lang="zh">像问同事一样问一只股票：几秒拿到实时数据，四位 AI 分析师并行研究，多空辩论，最后给出一个带价格条件、触及概率和 Verdict 评分的明确结论。终端、Claude Code、Codex 都能用。</span>
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/Zhao73/verdict">★ <span lang="en">Star on GitHub</span><span lang="zh">在 GitHub 上点 Star</span></a>
+      <a class="btn" href="reports/acme.en.html" id="sample"><span lang="en">Open a sample report</span><span lang="zh">看一份示例报告</span></a>
+    </div>
+    <div class="install"><code><span class="p">$</span> npm install -g github:Zhao73/verdict &amp;&amp; verdict demo</code></div>
+    <div class="video"><video id="video" autoplay muted loop playsinline controls poster="social.png" src="verdict-motion.mp4"></video></div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2><span lang="en">How it works</span><span lang="zh">工作方式</span></h2>
+    <p class="lead"><span lang="en">Code fetches the facts first, models research and argue, code does the math, and code assembles the report, so nothing gets lost in a summary.</span><span lang="zh">代码先抓数据，模型负责研究和辩论，计算交给代码，报告也由代码拼装，任何内容都不会在总结时丢失。</span></p>
+    <div class="video" style="margin:0 0 30px"><video id="walk" muted loop playsinline controls preload="metadata" poster="social.png" src="verdict-demo.mp4"></video></div>
+    <div class="grid">
+      <div class="card"><span class="k">01 · SNAPSHOT</span><h3><span lang="en">Live data in seconds</span><span lang="zh">几秒拿到实时数据</span></h3><p><span lang="en">Price, history, filings, fundamentals, options and dated news, fetched in parallel before any model runs.</span><span lang="zh">价格、走势、公告、财务、期权和带日期的新闻，在模型运行前并行抓取。</span></p></div>
+      <div class="card"><span class="k">02 · DESKS</span><h3><span lang="en">Four analysts in parallel</span><span lang="zh">四位分析师并行</span></h3><p><span lang="en">Business, expectations, news and risk desks, each running about five targeted searches and steered by your question.</span><span lang="zh">业务、预期、新闻、风险四个研究台，每个约 5 次针对性搜索，重点跟着你的问题走。</span></p></div>
+      <div class="card"><span class="k">03 · DEBATE</span><h3><span lang="en">Bull vs bear</span><span lang="zh">多空辩论</span></h3><p><span lang="en">The strongest long and short cases, argued from the record, then a portfolio manager decides while you watch.</span><span lang="zh">多头和空头基于研究记录各自论证，投资经理当着你的面写下结论。</span></p></div>
+      <div class="card"><span class="k">04 · VERDICT</span><h3><span lang="en">A verdict you can act on</span><span lang="zh">拿来就能用的结论</span></h3><p><span lang="en">Rating, value range, price levels to avoid, start or add, catalysts, risks and what would prove it wrong.</span><span lang="zh">评级、估值区间、回避 / 建仓 / 加仓的价格条件、催化剂、风险，以及什么情况说明判断错了。</span></p></div>
+      <div class="card"><span class="k">05 · RECEIPTS</span><h3><span lang="en">Every claim has a source</span><span lang="zh">每条结论都有出处</span></h3><p><span lang="en">Every finding links to its source. Missing data is listed, never guessed, and a run that did not finish says so.</span><span lang="zh">每条发现都能追溯到来源；缺失的数据会列出，绝不靠猜；没跑完的研究会明确标出。</span></p></div>
+      <div class="card"><span class="k">06 · EVERYWHERE</span><h3><span lang="en">Terminal, Claude Code, Codex</span><span lang="zh">终端、Claude Code、Codex</span></h3><p><span lang="en">A full-screen app and a stream mode, plus plugins where subagents research in parallel. One history across all of them.</span><span lang="zh">全屏应用和命令行两种模式，外加插件（子代理并行研究），研究历史在各入口之间共享。</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span lang="en">Verdict methods: code does the math</span><span lang="zh">Verdict 独家方法：计算交给代码</span></h2>
+    <p class="lead"><span lang="en">Seven deterministic methods frame the thesis before the models write and audit the verdict after. They roll up into a 0–100 Verdict Score that cross-checks the rating and never overrides it.</span><span lang="zh">七种方法由代码按固定规则计算：模型动笔前先给论点定好框架，结论出来后再逐条检验，最后汇总成 0–100 的 Verdict 评分。评分用来交叉检验评级，不会改动评级。</span></p>
+    <div class="methods">
+      <div class="m"><i>BEFORE</i><div><b><span lang="en">Priced-in growth</span><span lang="zh">价格隐含的增长</span></b><span><span lang="en">Reverse DCF: the growth today's price already assumes, compared with what the business delivered.</span><span lang="zh">反向 DCF：现价已经假设了多高的增长，再和公司过去的实际增速对比。</span></span></div></div>
+      <div class="m"><i>BEFORE</i><div><b><span lang="en">Options-implied move</span><span lang="zh">期权隐含波动</span></b><span><span lang="en">The move the options market prices, and whether that is more than recent history.</span><span lang="zh">期权市场预期的波动区间，以及它是否高于近期的实际波动。</span></span></div></div>
+      <div class="m"><i>BEFORE</i><div><b><span lang="en">Tape</span><span lang="zh">走势状态</span></b><span><span lang="en">Trend × volatility regime, with what it means for timing.</span><span lang="zh">趋势和波动组合出的市场状态，以及它对择时意味着什么。</span></span></div></div>
+      <div class="m"><i class="after">AFTER</i><div><b><span lang="en">Zone odds</span><span lang="zh">触及概率</span></b><span><span lang="en">The chance the price actually reaches each price level within three months.</span><span lang="zh">3 个月内股价走到每个价位区间的概率。</span></span></div></div>
+      <div class="m"><i class="after">AFTER</i><div><b><span lang="en">Payoff</span><span lang="zh">收益风险</span></b><span><span lang="en">Scenario-weighted value, upside vs downside and reward-to-risk.</span><span lang="zh">情景加权价值、上行与下行空间、收益/风险比。</span></span></div></div>
+      <div class="m"><i class="after">AFTER</i><div><b><span lang="en">Evidence balance &amp; audit</span><span lang="zh">证据天平与一致性检查</span></b><span><span lang="en">Findings weighted by source quality; a rating that contradicts the evidence is flagged ⚠.</span><span lang="zh">按来源质量给研究发现加权；评级和证据方向相反时用 ⚠ 标出。</span></span></div></div>
+    </div>
+    <div class="score"><div class="dial"><b>66</b></div><div><span lang="en"><b style="color:var(--fg)">Verdict Score</b> · value 35% · evidence 30% · fundamentals 20% · tape 15%. <a href="https://github.com/Zhao73/verdict/blob/main/docs/METHODS.md">Formulas and limits →</a></span><span lang="zh"><b style="color:var(--fg)">Verdict 评分</b> · 价值 35% · 证据 30% · 基本面 20% · 走势 15%。<a href="https://github.com/Zhao73/verdict/blob/main/docs/METHODS.zh-CN.md">公式与局限 →</a></span></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span lang="en">11 languages. Any market.</span><span lang="zh">11 种语言，全球市场</span></h2>
+    <p class="lead"><span lang="en">Ask in your language and Verdict answers in it, or pick one with <code>verdict lang</code>. Company names are understood in their home language.</span><span lang="zh">用你的语言提问，就用你的语言回答；也可以用 <code>verdict lang</code> 固定一种语言。公司名可以直接用当地语言输入。</span></p>
+    <div class="langs"><span>English</span><span>简体中文</span><span>繁體中文</span><span>日本語</span><span>한국어</span><span>Français</span><span>Deutsch</span><span>Español</span><span>Italiano</span><span>Português</span><span>Nederlands</span></div>
+    <div class="langs"><span>🇺🇸 NVDA</span><span>🇨🇳 600519 · 贵州茅台</span><span>🇭🇰 0700 · 腾讯</span><span>🇹🇼 2330 · 台積電</span><span>🇯🇵 7203 · トヨタ</span><span>🇰🇷 005930 · 삼성전자</span><span>🇬🇧 SHEL.L</span><span>🇪🇺 SAP.DE · MC.PA · ASML.AS</span><span>🇦🇺 BHP.AX</span><span>🇨🇦 🇮🇳 🇸🇬 🇧🇷</span></div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2><span lang="en">Install</span><span lang="zh">安装</span></h2>
+    <p class="lead"><span lang="en">Node 20+ and either an Anthropic API key or a signed-in Claude Code. The demo needs neither.</span><span lang="zh">需要 Node 20 及以上，外加 Anthropic API Key 或已登录的 Claude Code 二选一。演示两者都不需要。</span></p>
+    <div class="tabs" id="tabs"><button class="on" data-t="t1">macOS · Linux</button><button data-t="t2">Windows</button><button data-t="t3">Claude Code</button><button data-t="t4">Codex</button></div>
+    <pre id="t1">npm install -g github:Zhao73/verdict
+verdict demo            <span class="c"># offline, a fictional company</span>
+verdict NVDA            <span class="c"># deep research</span>
+verdict                 <span class="c"># the full-screen app</span></pre>
+    <pre id="t2" hidden>winget install OpenJS.NodeJS.LTS
+npm install -g github:Zhao73/verdict
+verdict doctor
+verdict demo --app      <span class="c"># best in Windows Terminal</span></pre>
+    <pre id="t3" hidden>/plugin marketplace add Zhao73/verdict
+/plugin install verdict@verdict
+/verdict NVDA</pre>
+    <pre id="t4" hidden>codex plugin marketplace add Zhao73/verdict
+codex plugin add verdict@verdict
+@verdict research NVDA</pre>
+    <h2 style="margin-top:44px"><span lang="en">Sample reports</span><span lang="zh">示例报告</span></h2>
+    <p class="lead"><span lang="en">Full HTML reports from the offline demo, on a fictional company.</span><span lang="zh">离线演示生成的完整 HTML 报告（虚构公司）。</span></p>
+    <div class="reports"><a class="btn" href="reports/acme.en.html">ACME · English</a><a class="btn" href="reports/acme.zh-CN.html">ACME · 简体中文</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><a href="https://github.com/Zhao73/verdict">github.com/Zhao73/verdict</a> · MIT</p>
+    <p><span lang="en">Verdict produces AI-generated research from public sources. It is not investment advice and it can be wrong. Demo content uses a fictional company.</span><span lang="zh">Verdict 由 AI 基于公开来源生成研究内容，不构成投资建议，也可能出错。演示内容使用虚构公司。</span></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  function set(l) {
+    root.setAttribute("data-lang", l);
+    root.lang = l === "zh" ? "zh-CN" : "en";
+    var v = document.getElementById("video");
+    var src = l === "zh" ? "verdict-motion.zh-CN.mp4" : "verdict-motion.mp4";
+    if (v.getAttribute("src") !== src) { v.setAttribute("src", src); v.play && v.play().catch(function () {}); }
+    var w = document.getElementById("walk");
+    w.setAttribute("src", l === "zh" ? "verdict-demo.zh-CN.mp4" : "verdict-demo.mp4");
+    w.setAttribute("poster", l === "zh" ? "social.zh-CN.png" : "social.png");
+    v.setAttribute("poster", l === "zh" ? "social.zh-CN.png" : "social.png");
+    document.getElementById("sample").setAttribute("href", l === "zh" ? "reports/acme.zh-CN.html" : "reports/acme.en.html");
+    try { localStorage.setItem("verdict-lang", l); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem("verdict-lang"); } catch (e) {}
+  var q = new URLSearchParams(location.search).get("lang");
+  set(q === "zh" || q === "en" ? q : saved || (/^zh/i.test(navigator.language || "") ? "zh" : "en"));
+  document.getElementById("lang").onclick = function () { set(root.getAttribute("data-lang") === "zh" ? "en" : "zh"); };
+  document.querySelectorAll("#tabs button").forEach(function (b) {
+    b.onclick = function () {
+      document.querySelectorAll("#tabs button").forEach(function (x) { x.classList.toggle("on", x === b); document.getElementById(x.dataset.t).hidden = x !== b; });
+    };
+  });
+})();
+</script>
+</body>
+</html>

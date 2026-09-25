@@ -22,8 +22,18 @@
 </p>
 
 <p align="center">
-  <img src="assets/app.svg" alt="The Verdict full-screen app showing a verdict for a fictional company" width="100%">
+  <a href="https://github.com/Zhao73/verdict/actions/workflows/ci.yml"><img src="https://github.com/Zhao73/verdict/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/Zhao73/verdict/releases"><img src="https://img.shields.io/github/v/release/Zhao73/verdict?color=f5a524&label=release" alt="release"></a>
+  <img src="https://img.shields.io/badge/macOS%20%C2%B7%20Linux%20%C2%B7%20Windows-supported-58a6ff" alt="macOS · Linux · Windows">
+  <img src="https://img.shields.io/badge/languages-11-f5a524" alt="11 languages">
+  <img src="https://img.shields.io/badge/Claude%20Code%20%C2%B7%20Codex-plugin-8a63d2" alt="Claude Code · Codex plugin">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8b8780" alt="MIT"></a>
 </p>
+
+<p align="center">
+  <a href="assets/verdict-demo.mp4"><img src="assets/demo.gif" alt="Verdict researching a fictional company: live desks, bull vs bear, the verdict, Verdict methods and 11 languages" width="100%"></a>
+</p>
+<p align="center"><sub>▶ Product video: <a href="assets/verdict-motion.mp4">English</a> · <a href="assets/verdict-motion.zh-CN.mp4">中文</a> &nbsp;·&nbsp; walkthrough: <a href="assets/verdict-demo.mp4">English</a> · <a href="assets/verdict-demo.zh-CN.mp4">中文</a> &nbsp;·&nbsp; <a href="https://zhao73.github.io/verdict/">website</a> — the demo company is fictional</sub></p>
 
 ## What you get
 
@@ -157,6 +167,8 @@ verdict demo --app     # the full-screen app
 
 Run `verdict` with no arguments.
 
+<p align="center"><img src="assets/app.svg" alt="The Verdict tab: rating, Verdict Score, value range and price levels" width="100%"></p>
+
 <p align="center"><img src="assets/evidence.svg" alt="Evidence tab: findings with their sources" width="100%"></p>
 
 - **Command bar** — type a ticker or a question; `/fast`, `/compare NVDA AMD AVGO`, `/watch`,
@@ -251,6 +263,8 @@ npm run shots     # regenerate the README images from the real renderers
 `src/cli` commands and stream mode · `src/render` Markdown / HTML / terminal · `src/mcp` plugin
 server. The engine, MCP server and renderers have no dependencies, so the plugins run straight from
 a checkout. See [CHANGELOG.md](CHANGELOG.md).
+
+<p align="center"><b>If Verdict saves you time, a ⭐ helps other people find it.</b></p>
 
 ---
 

@@ -9,7 +9,19 @@
 
 <p align="center"><a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ko.md">한국어</a></p>
 
-<p align="center"><img src="assets/app.svg" alt="Verdict のフルスクリーンアプリ（架空の企業の例）" width="100%"></p>
+<p align="center">
+  <a href="https://github.com/Zhao73/verdict/actions/workflows/ci.yml"><img src="https://github.com/Zhao73/verdict/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/Zhao73/verdict/releases"><img src="https://img.shields.io/github/v/release/Zhao73/verdict?color=f5a524&label=release" alt="release"></a>
+  <img src="https://img.shields.io/badge/macOS%20%C2%B7%20Linux%20%C2%B7%20Windows-supported-58a6ff" alt="macOS · Linux · Windows">
+  <img src="https://img.shields.io/badge/languages-11-f5a524" alt="11 languages">
+  <img src="https://img.shields.io/badge/Claude%20Code%20%C2%B7%20Codex-plugin-8a63d2" alt="Claude Code · Codex plugin">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8b8780" alt="MIT"></a>
+</p>
+
+<p align="center">
+  <a href="assets/verdict-demo.mp4"><img src="assets/demo.gif" alt="Verdict のデモ（架空の企業）" width="100%"></a>
+</p>
+<p align="center"><sub>▶ プロダクト動画：<a href="assets/verdict-motion.mp4">English</a> · <a href="assets/verdict-motion.zh-CN.mp4">中文</a> ・ 実機デモ：<a href="assets/verdict-demo.mp4">English</a></sub></p>
 
 ## できること
 
@@ -77,5 +89,7 @@ verdict doctor
 `/verdict トヨタ` のように使えます。Codex では `codex plugin marketplace add Zhao73/verdict` のあと `@verdict トヨタを調べて`。
 
 対応言語は 11（日本語・英語・中国語簡体字/繁体字・韓国語・仏・独・西・伊・葡・蘭）、対応市場は米国・日本・中国・香港・台湾・韓国・英国・欧州・豪州など。詳細は [English README](README.md#languages--markets) をご覧ください。
+
+<p align="center"><b>役に立ったら ⭐ をお願いします。ほかの人が見つけやすくなります。</b></p>
 
 <sub>公開情報をもとに AI が生成したリサーチです。投資助言ではなく、誤りを含むことがあります。MIT ライセンス。</sub>

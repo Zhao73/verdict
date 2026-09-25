@@ -3,6 +3,27 @@
 All notable changes to Verdict. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] — 2026-09-25
+
+### Added
+- A product motion video in English and Chinese (`assets/verdict-motion.mp4`,
+  `assets/verdict-motion.zh-CN.mp4`, 60 fps). It is one continuous shape: a button becomes the
+  input, a data card, four analyst tiles, a bull-vs-bear bar, the verdict, a price chart, the
+  methods, a language pill, the terminal and the Star button. Every move is a damped spring.
+  `npm run motion` rebuilds it from the offline demo's numbers.
+- A 50-second walkthrough of the real app in English and Chinese (`assets/verdict-demo.mp4`,
+  `assets/verdict-demo.zh-CN.mp4`) and README GIFs. Every terminal frame is the real app drawing
+  the offline demo. `npm run video` rebuilds them.
+- The offline demo speaks Simplified Chinese: `verdict demo --lang zh-CN` gives the same
+  fictional company and the same numbers, in Chinese.
+- A landing page for GitHub Pages (`site/`, `npm run site`) with the videos and two full sample
+  reports, deployed by `.github/workflows/pages.yml` once Pages is enabled.
+- Social preview cards (`assets/social.png`, `assets/social.zh-CN.png`) and README badges.
+
+### Fixed
+- Chinese and Japanese text no longer wraps with closing punctuation (，。、) at the start of a
+  line.
+
 ## [1.1.0] — 2026-09-24
 
 ### Verdict methods
